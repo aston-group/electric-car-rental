@@ -1,0 +1,53 @@
+server:
+  port: 8080
+
+spring:
+  application:
+    name: api-gateway
+  autoconfigure:
+    exclude:
+      - org.springframework.boot.autoconfigure.orm.jpa.HibernateJpaAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceAutoConfiguration
+      - org.springframework.boot.autoconfigure.jdbc.DataSourceTransactionManagerAutoConfiguration
+  cloud:
+    gateway:
+      routes:
+        - id: user-management
+          uri: lb://user-management
+          predicates:
+            - Path=/users/**
+
+        - id: notifications
+          uri: lb://notifications
+          predicates:
+            - Path=/notifications/**
+
+        - id: car-management
+          uri: lb://car-management
+          predicates:
+            - Path=/cars/**
+
+        - id: car-charger-management
+          uri: lb://car-charger-management
+          predicates:
+            - Path=/chargers/**
+
+        - id: car-booking
+          uri: lb://car-booking
+          predicates:
+            - Path=/bookings/**
+
+
+eureka:
+  client:
+    service-url:
+      defaultZone: http://discovery-server:8761/eureka/
+
+  instance:
+    preferIpAddress: true
+
+logging:
+  level:
+    org.springframework.orm.jpa: INFO
+    org.springframework.transaction: INFO
+    org.springframework.web: INFO

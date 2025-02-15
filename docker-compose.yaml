@@ -1,0 +1,210 @@
+services:
+  discovery-server:
+    build: discovery-server
+    image: discovery-server
+    container_name: discovery-server
+    ports:
+      - "8761:8761"
+    networks:
+      - car-network
+
+  api-gateway:
+    build: api-gateway
+    image: api-gateway
+    container_name: api-gateway
+    ports:
+      - "8080:8080"
+    depends_on:
+      discovery-server:
+        condition: service_started
+    networks:
+      - car-network
+
+  user-management:
+    build: user-management
+    image: user-management
+    container_name: user-management
+    ports:
+      - "8081:8081"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      users-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://users-db:5432/user_management
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+    networks:
+      - car-network
+
+  users-db:
+    image: postgres:16.1
+    container_name: postgres-users
+    ports:
+      - "6541:5432"
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USER=user
+      - POSTGRES_DB=user_management
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - car-network
+
+  notifications:
+    build: notifications
+    image: notifications
+    container_name: notifications
+    ports:
+      - "8082:8082"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      notifications-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://notifications-db:5432/notifications
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+    networks:
+      - car-network
+
+  notifications-db:
+    image: postgres:16.1
+    container_name: postgres-notifications
+    ports:
+      - "6542:5432"
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USER=user
+      - POSTGRES_DB=notifications
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - car-network
+
+  car-management:
+    build: car-management
+    image: car-management
+    container_name: car-management
+    ports:
+      - "8083:8083"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      car-management-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://car-management-db:5432/car-management
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+    networks:
+      - car-network
+
+  car-management-db:
+    image: postgres:16.1
+    container_name: postgres-car-management
+    ports:
+      - "6543:5432"
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USER=user
+      - POSTGRES_DB=car-management
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - car-network
+
+  car-charger-management:
+    build: car-charger-management
+    image: car-charger-management
+    container_name: car-charger-management
+    ports:
+      - "8084:8084"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      car-charger-management-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://car-charger-management-db:5432/car-charger-management
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+    networks:
+      - car-network
+
+  car-charger-management-db:
+    image: postgres:16.1
+    container_name: postgres-car-charger-management
+    ports:
+      - "6544:5432"
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USER=user
+      - POSTGRES_DB=car-charger-management
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - car-network
+
+  car-booking:
+    build: car-booking
+    image: car-booking
+    container_name: car-booking
+    ports:
+      - "8085:8085"
+    depends_on:
+      api-gateway:
+        condition: service_started
+      discovery-server:
+        condition: service_started
+      car-booking-db:
+        condition: service_healthy
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://car-booking-db:5432/car-booking
+      - SPRING_DATASOURCE_USERNAME=user
+      - SPRING_DATASOURCE_PASSWORD=user
+    networks:
+      - car-network
+
+  car-booking-db:
+    image: postgres:16.1
+    container_name: postgres-car-booking
+    ports:
+      - "6545:5432"
+    environment:
+      - POSTGRES_PASSWORD=user
+      - POSTGRES_USER=user
+      - POSTGRES_DB=car-booking
+    healthcheck:
+      test: pg_isready -q -d $$POSTGRES_DB -U $$POSTGRES_USER
+      timeout: 5s
+      interval: 5s
+      retries: 10
+    networks:
+      - car-network
+
+networks:
+  car-network:
+    driver: bridge

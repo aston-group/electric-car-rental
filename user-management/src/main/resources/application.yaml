@@ -7,8 +7,19 @@ spring:
     url: jdbc:postgresql://localhost:6541/user_management
     username: user
     password: user
+  #########################################################################
+    #url: jdbc:postgresql://localhost:5432/postgres
+    #username: postgres
+    #password: 1331
+
   application:
     name: user-management
+  #security:
+    #oauth2:
+      #authorizationserver:
+        #issuer-uri: http://localhost:8081/oauth/token
+  ########################################################################
+    #name: postgres
 
   jpa:
     hibernate:
@@ -25,7 +36,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka/
   instance:
     preferIpAddress: true
 
@@ -34,3 +45,9 @@ logging:
     org.springframework.orm.jpa: INFO
     org.springframework.transaction: INFO
     org.springframework.web: INFO
+
+    root: DEBUG
+    org.apache.tomcat.util.net.NioEndpoint: ERROR
+    sun.rmi: ERROR
+    java.io: ERROR
+    javax.management: ERROR

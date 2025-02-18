@@ -1,6 +1,8 @@
 package ru.astongroup.usermanagement.models;
 
 import java.util.Date;
+import java.util.List;
+import java.util.Collection;
 
 import lombok.Getter;
 import lombok.Setter;
@@ -14,8 +16,8 @@ import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 
-//import org.springframework.security.core.GrantedAuthority;
-//import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.GrantedAuthority;
+import org.springframework.security.core.userdetails.UserDetails;
 
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
@@ -25,7 +27,7 @@ import ru.astongroup.usermanagement.models.enums.UserStatus;
 @Entity
 @RequiredArgsConstructor
 @Table(name = "users", schema = "public")
-public class UserModel/* implements UserDetails */{
+public class UserModel implements UserDetails {
 
     @Id
     @Column(name = "id", columnDefinition = "bigserial")
@@ -68,13 +70,13 @@ public class UserModel/* implements UserDetails */{
     //Для реализации UserDetails
     //из комплекта Spring.Security
     private String username;
-/*
+
     @Override
     public Collection<? extends GrantedAuthority> getAuthorities() {
         return List.of();
-    }*/
+    }
 
-    //@Override
+    @Override
     public String getUsername() {
         return email;
     }

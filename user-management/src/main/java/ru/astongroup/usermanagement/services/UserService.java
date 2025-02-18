@@ -35,6 +35,7 @@ public class UserService {
 
             String hashedPassword = PasswordHashing.createPasswordHash(user.getPassword());
             user.setPassword(hashedPassword);
+            user.setUsername(user.getEmail());
 
             var savedUser = userRepository.save(user);
 

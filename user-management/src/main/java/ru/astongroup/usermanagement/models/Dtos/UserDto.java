@@ -1,15 +1,13 @@
 package ru.astongroup.usermanagement.models.Dtos;
 
 import lombok.Data;
+import java.util.Date;
 
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
 
-import java.util.Date;
-
 @Data
 public class UserDto {
-
     private long id;
     private String name;
     private String lastName;

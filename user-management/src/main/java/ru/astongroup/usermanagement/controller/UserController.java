@@ -1,14 +1,11 @@
 package ru.astongroup.usermanagement.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import ru.astongroup.usermanagement.components.JwtTokenProvider;
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.services.UserService;
@@ -18,15 +15,13 @@ import ru.astongroup.usermanagement.services.UserService;
 public class UserController {
 
     private final UserService userService;
+    private final JwtTokenProvider tokenProvider;
 
-    public UserController(UserService userService) {
+    public UserController(UserService userService, JwtTokenProvider tokenProvider) {
+
         this.userService = userService;
+        this.tokenProvider = tokenProvider;
     }
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello from User Controller!";
-    }
-
 
     @PostMapping("/create")
     public Boolean register(@RequestBody UserModel user) {
@@ -41,9 +36,24 @@ public class UserController {
     }
 
     @GetMapping("/mail/{email}")
-    public UserModel getUserByEmail(@PathVariable String email) {
+    public ResponseEntity<?> getUserByEmail(
+            @PathVariable String email,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        return userService.getByEmail(email);
+        String token = authHeader.substring(7);
+        var existingUser = userService.getByEmail(email);
+
+        if (authHeader.isEmpty()) {
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!isValidToken(token, existingUser)) {
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (existingUser != null) {
+            return ResponseEntity.ok(existingUser);
+        }
+        return null;
     }
 
     @GetMapping("/{id}")
@@ -65,5 +75,9 @@ public class UserController {
         return userService.deleteById(id);
     }
 
+    private boolean isValidToken(String token, UserModel user) {
 
+        return tokenProvider.validateToken(token, user);
+        //token.startsWith("Bearer ");
+    }
 }

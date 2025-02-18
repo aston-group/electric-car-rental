@@ -26,9 +26,8 @@ import ru.astongroup.usermanagement.models.enums.UserStatus;
 @Setter
 @Entity
 @RequiredArgsConstructor
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 public class UserModel implements UserDetails {
-
     @Id
     @Column(name = "id", columnDefinition = "bigserial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)

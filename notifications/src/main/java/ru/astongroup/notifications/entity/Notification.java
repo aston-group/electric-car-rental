@@ -2,6 +2,8 @@ package ru.astongroup.notifications.entity;
 
 import com.fasterxml.jackson.annotation.JsonFormat;
 import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
@@ -31,6 +33,10 @@ public class Notification {
 
     @Column(name = "car_id")
     private Long carId;
+
+    @Column(name = "type")
+    @Enumerated(EnumType.STRING)
+    private NotificationType type;
 
     @Column(name = "booking_start")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

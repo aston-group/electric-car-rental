@@ -6,6 +6,7 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import ru.astongroup.notifications.entity.NotificationType;
 
 import java.time.LocalDateTime;
 
@@ -19,6 +20,8 @@ public class NotificationCreateDto {
     private Long userId;
     @NotNull
     private Long carId;
+    @NotNull
+    private NotificationType type;
     @NotNull
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
     private LocalDateTime bookingStart;

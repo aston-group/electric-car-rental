@@ -27,4 +27,11 @@ public class NotificationController {
 
         return new ResponseEntity<>(response, HttpStatus.CREATED);
     }
+
+    @PostMapping
+    public ResponseEntity<NotificationResponseDto> sendNotification(@Valid @RequestBody NotificationCreateDto dto) {
+        NotificationResponseDto response = notificationService.createNotification(dto);
+
+        return new ResponseEntity<>(response, HttpStatus.CREATED);
+    }
 }

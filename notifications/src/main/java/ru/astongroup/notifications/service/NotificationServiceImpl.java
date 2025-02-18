@@ -18,10 +18,12 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationResponseDto createNotification(NotificationCreateDto dto) {
-
-        log.info("Пытаюсь создать новое уведомлений для пользователя с id = {}", dto.getUserId());
+        log.info("Пытаюсь сохранить новое уведомлений для пользователя с id = {}", dto.getUserId());
         Notification notification = notificationRepository.save(NotificationMapper.matToNotification(dto));
-        log.info("Создано уведомление для пользователя с id = {} на авто с id = {}", dto.getUserId(), dto.getCarId());
+        log.info("Сохранено уведомление для пользователя с id = {} на авто с id = {}", dto.getUserId(), dto.getCarId());
         return NotificationMapper.mapToResponseDto(notification);
     }
+
+    // Метод будет отправлять уведомления в зависимости от полученного типа, наверное через свитч
+    public void sendNotification(NotificationCreateDto dto) {}
 }

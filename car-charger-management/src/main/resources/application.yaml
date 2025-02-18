@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6544/car-charger-management
-    username: user
-    password: user
+    url: jdbc:postgresql://localhost:5432/car-charger-management
+    username: postgres
+    password: admin
   application:
     name: car-charger-management
 

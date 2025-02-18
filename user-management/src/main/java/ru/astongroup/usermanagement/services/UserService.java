@@ -52,12 +52,12 @@ public class UserService {
         return users.stream().map(UserModel::toDto).toList();
     }
 
-    public UserDto getByEmail(String email) {
+    public UserModel getByEmail(String email) {
 
         var userOptional = userRepository.findByEmail(email);
 
         if(userOptional.isPresent()) {
-            return userOptional.get().toDto();
+            return userOptional.get();
         }
         else {
             String message = StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE;

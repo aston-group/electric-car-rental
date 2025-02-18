@@ -4,17 +4,8 @@ import java.util.Date;
 import java.util.List;
 import java.util.Collection;
 
-import lombok.Getter;
-import lombok.Setter;
-import lombok.RequiredArgsConstructor;
-
-import jakarta.persistence.Id;
-import jakarta.persistence.Table;
-import jakarta.persistence.Column;
-import jakarta.persistence.Entity;
-import jakarta.persistence.Enumerated;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
+import jakarta.persistence.*;
+import lombok.*;
 
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
@@ -25,10 +16,11 @@ import ru.astongroup.usermanagement.models.enums.UserStatus;
 @Getter
 @Setter
 @Entity
+@Builder
+@AllArgsConstructor
 @RequiredArgsConstructor
-@Table(name = "users", schema = "public")
+@Table(name = "users")
 public class UserModel implements UserDetails {
-
     @Id
     @Column(name = "id", columnDefinition = "bigserial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -62,13 +54,10 @@ public class UserModel implements UserDetails {
     private Date lastLoginDate = new Date();
 
     @Column(name = "userstatus")
-    @Enumerated(jakarta.persistence.EnumType.ORDINAL)
+    @Enumerated(EnumType.ORDINAL)
     private UserStatus userStatus = UserStatus.USER;
 
     @Column(name = "username", columnDefinition = "text")
-
-    //Для реализации UserDetails
-    //из комплекта Spring.Security
     private String username;
 
     @Override
@@ -81,8 +70,20 @@ public class UserModel implements UserDetails {
         return email;
     }
 
-    public UserDto toDto() {
-        return new UserDto(this);
-
+    @Override
+    public String toString() {
+        return "UserModel{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", email='" + email + '\'' +
+                ", password='" + password + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", phone='" + phone + '\'' +
+                ", created=" + created +
+                ", updated=" + updated +
+                ", image=" + image +
+                ", lastLoginDate=" + lastLoginDate +
+                ", userStatus=" + userStatus +
+                '}';
     }
 }

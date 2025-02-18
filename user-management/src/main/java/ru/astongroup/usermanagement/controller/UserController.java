@@ -1,69 +1,146 @@
 package ru.astongroup.usermanagement.controller;
 
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.DeleteMapping;
-import org.springframework.web.bind.annotation.RestController;
-import org.springframework.web.bind.annotation.RequestMapping;
+import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.responses.ApiResponse;
+import io.swagger.v3.oas.annotations.responses.ApiResponses;
+import io.swagger.v3.oas.annotations.tags.Tag;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
+import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.web.bind.annotation.*;
 
+import ru.astongroup.usermanagement.components.JwtTokenProvider;
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.services.UserService;
+import ru.astongroup.usermanagement.utils.mapper.UserMapper;
 
+import java.util.Collection;
+
+@Tag(name= "User Management Service", description = "API для менеджмента пользователей и аутенфикации")
+@Slf4j
 @RestController
 @RequestMapping("/users")
+@RequiredArgsConstructor
 public class UserController {
 
     private final UserService userService;
-
-    public UserController(UserService userService) {
-        this.userService = userService;
-    }
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello from User Controller!";
-    }
-
+    private final JwtTokenProvider tokenProvider;
 
     @PostMapping("/create")
-    public Boolean register(@RequestBody UserModel user) {
+    @Operation(summary = "Создать нового пользователя", description = "Создаёт нового пользователя")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Пользователь создан"),
+            @ApiResponse(responseCode = "409", description = "Не удалось создать пользователя")
+    })
+    public ResponseEntity<?> register(@RequestBody UserModel user) {
 
-        return userService.create(user);
+        var createdUser = userService.create(user);
+        if (createdUser != null) {
+            log.info("Пользователь создан: {}", createdUser.toString());
+            return ResponseEntity.status(HttpStatus.CREATED).body(createdUser);
+        }
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Не удалось создать пользователя");
     }
 
     @GetMapping
-    public Iterable<UserDto> getAllUsers() {
+    @ApiResponse(responseCode = "200", description = "Список пользователей получен")
+    @Operation(summary = "Получить список всех пользователей", description = "возвращает список всех пользователей")
 
-        return userService.getAll();
+    public ResponseEntity<Iterable<UserDto>> getAllUsers() {
+
+        Collection<UserDto> users = userService.getAll();
+        log.info("Пользователи получены: {}", users.toString());
+        return new ResponseEntity<>(users, HttpStatus.ACCEPTED);
     }
 
     @GetMapping("/mail/{email}")
-    public UserDto getUserByEmail(@PathVariable String email) {
+    @Operation(summary = "Получить пользователя по email", description = "возвращает пользователя по email")
+    @ApiResponses({
+            @ApiResponse(responseCode = "200", description = "Пользователь найден"),
+            @ApiResponse(responseCode = "401", description = "Пользователь не авторизован"),
+            @ApiResponse(responseCode = "403", description = "Доступ закрыт")
+    })
+    public ResponseEntity<?> getUserByEmail(
+            @PathVariable String email,
+            @RequestHeader(value = "Authorization", required = false) String authHeader) {
 
-        return userService.getByEmail(email);
+        String token = authHeader.substring(7);
+        log.info("-------------------------\nТокен получен: {}\n-------------------------", token);
+        var existingUser = userService.getByEmail(email);
+
+        if (authHeader.isEmpty()) {
+            log.info("-------------------------\nЗаголовок авторизации пустой\n-------------------------");
+            return ResponseEntity.status(HttpStatus.UNAUTHORIZED).build();
+        }
+
+        if (!isValidToken(token, UserMapper.mapToDto(existingUser))) {
+            log.info("-------------------------\nПользователь {}- токен инвалид\n-------------------------", email);
+            return ResponseEntity.status(HttpStatus.FORBIDDEN).build();
+        }
+        if (existingUser != null) {
+            log.info("-------------------------\nВозвращаем юзера: {}\n-------------------------", existingUser.getEmail());
+            return ResponseEntity.ok(existingUser);
+        }
+        return null;
     }
 
     @GetMapping("/{id}")
-    public UserDto getUserById(@PathVariable long id) {
+    @Operation(summary = "Получить пользователя по id", description = "возвращает пользователя по id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Пользователь найден"),
+            @ApiResponse(responseCode = "500", description = "Пользователь не найден")
+    })
+    public ResponseEntity<?> getUserById(@PathVariable long id) {
 
-        return userService.getById(id);
+        var user = userService.getById(id);
+
+        log.info("Пользователь получен: {}", user.getEmail());
+        return new ResponseEntity<>(user, HttpStatus.ACCEPTED);
     }
+
     @PutMapping("/update/{id}")
-    public boolean updateUserById(
+    @Operation(summary = "Обновить данные пользователя по id", description = "Обновляет данные пользователя по id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Пользователь обновлен"),
+            @ApiResponse(responseCode = "500", description = "Пользователь не обновлен")
+    })
+    public ResponseEntity<?> updateUserById(
             @PathVariable long id,
             @RequestBody UserModel user) {
 
-        return userService.updateById(id, user);
+        if (userService.updateById(id, user)) {
+            log.info("Пользователь обновлен: {}", user.getEmail());
+            return ResponseEntity.ok().build();
+        }
+        log.info("Пользователь {} не обновлен", user.getEmail());
+        return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Не удалось обновить пользоватьские данные");
     }
 
     @DeleteMapping("/delete/{id}")
-    public boolean deleteUserById(@PathVariable long id) {
+    @Operation(summary = "Удалить пользователя по id", description = "Удаляет пользователя по id")
+    @ApiResponses({
+            @ApiResponse(responseCode = "202", description = "Пользователь удалён"),
+            @ApiResponse(responseCode = "500", description = "Пользователь не удалён")
+    })
+    public ResponseEntity<?> deleteUserById(@PathVariable long id) {
 
-        return userService.deleteById(id);
+        var result = userService.deleteById(id);
+        if (result) {
+            log.info("Пользователь удален: {}", id);
+            return ResponseEntity.ok().build();
+        }
+        else {
+            log.info("Пользователь {} не удален", id);
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body("Не удалось удалить пользователя");
+        }
     }
 
+    private Boolean isValidToken(String token, UserDto userDto) {
 
+        log.info("Проверка валидации токена: {}", token);
+        return tokenProvider.validateToken(token, userDto);
+    }
 }

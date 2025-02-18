@@ -1,15 +1,19 @@
 package ru.astongroup.usermanagement.models.Dtos;
 
+import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
+import java.util.Date;
 
+import lombok.NoArgsConstructor;
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
 
-import java.util.Date;
-
 @Data
+@Builder
+@AllArgsConstructor
+@NoArgsConstructor
 public class UserDto {
-
     private long id;
     private String name;
     private String lastName;
@@ -19,16 +23,17 @@ public class UserDto {
     private  byte[] image;
     private Date created;
 
-    public UserDto() {}
-
-    public UserDto(UserModel user) {
-        this.id = user.getId();
-        this.name = user.getName();
-        this.lastName = user.getLastName();
-        this.email = user.getEmail();
-        this.userStatus = user.getUserStatus();
-        this.phone = user.getPhone();
-        this.image = user.getImage();
-        this.created = user.getCreated();
+    @Override
+    public String toString() {
+        return "UserDto{" +
+                "id=" + id +
+                ", name='" + name + '\'' +
+                ", lastName='" + lastName + '\'' +
+                ", email='" + email + '\'' +
+                ", userStatus=" + userStatus +
+                ", phone='" + phone + '\'' +
+                ", image=" + image +
+                ", created=" + created +
+                '}';
     }
 }

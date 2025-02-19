@@ -31,20 +31,15 @@ public class Notification {
     @Column(name = "user_id")
     private Long userId;
 
-    @Column(name = "car_id")
-    private Long carId;
+    @Column(name = "booking_id")
+    private Long bookingId;
 
     @Column(name = "type")
     @Enumerated(EnumType.STRING)
     private NotificationType type;
 
-    @Column(name = "booking_start")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime bookingStart;
-
-    @Column(name = "booking_end")
-    @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")
-    private LocalDateTime bookingEnd;
+    @Column(name = "message")
+    private String message;
 
     @Column(name = "created_on")
     @JsonFormat(shape = JsonFormat.Shape.STRING, pattern = "yyyy-MM-dd HH:mm:ss")

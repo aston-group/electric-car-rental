@@ -26,6 +26,30 @@ public class ErrorHandler {
         return buildErrorResponse(e, HttpStatus.BAD_REQUEST, "Incorrectly made request.");
     }
 
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleEventNotFound(final ClientRequestException e, WebRequest request) {
+        log.error("Ошибка 404 ClientRequestException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
+    public Map<String, String> handleEventNotFound(final ServerRequestException e, WebRequest request) {
+        log.error("Ошибка 500 ServerRequestException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleEventNotFound(final UserNotFoundException e, WebRequest request) {
+        log.error("Ошибка 404 UserNotFoundException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
     public Map<String, String> buildErrorResponse(Exception e, HttpStatus status, String reason) {
         Map<String, String> response = new LinkedHashMap<>();
         response.put("status", status.name());

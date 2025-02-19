@@ -1,6 +1,7 @@
 package ru.astongroup.notifications.entity;
 
 public enum NotificationType {
-    EMAIL,
-    TELEGRAM
+    NEW_BOOKING,
+    CONFIRMED_BOOKING,
+    REJECTED_BOOKING
 }

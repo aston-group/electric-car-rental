@@ -3,8 +3,14 @@ package ru.astongroup.notifications.client;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.http.HttpStatusCode;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
+import ru.astongroup.notifications.dto.UserRequestDto;
+import ru.astongroup.notifications.exception.ClientRequestException;
+import ru.astongroup.notifications.exception.ServerRequestException;
+
+import java.util.Optional;
 
 @Service
 @Slf4j
@@ -19,5 +25,26 @@ public class UserClient {
                 .build();
     }
 
-    // Нужен метод для получения данных пользователя, либо самого пользователя с данными для рассылки(почта, телеграм)
+    // получаем юзера
+    public Optional<UserRequestDto> getUserById(Long userId) {
+        log.info("Отправляем запрос на получения пользователя с id = {}", userId);
+        UserRequestDto user = restClient.get()
+                .uri("/" + userId)
+                .header("Content-Type", "application/json")
+                .retrieve()
+                .onStatus(HttpStatusCode::is4xxClientError, (request, response) -> {
+                    log.error("Ошибка при отправке запроса получения пользователя по id");
+                    throw new ClientRequestException(String.format("Ошибка клиента: %s %s", response.getStatusCode(),
+                            response.getHeaders()));
+                })
+                .onStatus(HttpStatusCode::is5xxServerError, ((request, response) -> {
+                    log.error("Ошибка сервера при получении пользователя по id");
+                    throw new ServerRequestException(String.format("Ошибка сервера: %s %s", response.getStatusCode(),
+                            response.getHeaders()));
+                }))
+                .body(UserRequestDto.class);
+
+        log.info("Пользователь с id = {} получен", userId);
+        return Optional.ofNullable(user);
+    }
 }

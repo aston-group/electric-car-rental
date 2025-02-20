@@ -4,9 +4,9 @@ server:
 spring:
   datasource:
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:5432/car-charger-management
-    username: postgres
-    password: admin
+    url: jdbc:postgresql://localhost:6544/car-charger-management
+    username: user
+    password: user
   application:
     name: car-charger-management
 
@@ -25,7 +25,7 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://localhost:8761/eureka/
+      defaultZone: http://discovery-server:8761/eureka/
   instance:
     preferIpAddress: true
 

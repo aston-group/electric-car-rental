@@ -5,6 +5,7 @@ import org.springframework.stereotype.Service;
 import ru.astongroup.carchargermanagement.dto.ChargerStationRequestDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationResponseDto;
 import ru.astongroup.carchargermanagement.entity.ChargerStation;
+import ru.astongroup.carchargermanagement.exception.DataNotFoundException;
 import ru.astongroup.carchargermanagement.mapper.ChargerStationMapper;
 import ru.astongroup.carchargermanagement.repository.ChargerStationRepository;
 
@@ -36,13 +37,19 @@ public class ChargerStationServiceImpl implements ChargerStationService {
     @Override
     public ChargerStationResponseDto findById(Long id) {
         Optional<ChargerStation> chargerStation = chargerStationRepository.findById(id);
-        return ChargerStationMapper.toChargerStationResponseDto(chargerStation.get());
+        if (chargerStation.isPresent()) {
+            return ChargerStationMapper.toChargerStationResponseDto(chargerStation.get());
+        } else {
+            throw new DataNotFoundException("Charger station not found" + id);
+        }
     }
-
 
     @Override
     @Transactional
     public void delete(Long id) {
+        if (!chargerStationRepository.existsById(id)) {
+            throw new DataNotFoundException("Charger station not found" + id);
+        }
         chargerStationRepository.deleteById(id);
     }
 
@@ -51,13 +58,11 @@ public class ChargerStationServiceImpl implements ChargerStationService {
         Optional<ChargerStation> chargerStationOptional = chargerStationRepository.findById(id);
         if (chargerStationOptional.isPresent()) {
             ChargerStation chargerStation = chargerStationOptional.get();
-
             chargerStation.setNameStation(chargerStationRequestDto.getNameStation());
             chargerStation.setAddressStation(chargerStationRequestDto.getAddressStation());
             chargerStation.setIsAvailableStation(chargerStationRequestDto.getIsAvailableStation());
             chargerStation.setLatitude(chargerStationRequestDto.getLatitude());
             chargerStation.setLongitude(chargerStationRequestDto.getLongitude());
-
             chargerStationRepository.save(chargerStation);
         }
     }

@@ -9,13 +9,6 @@ public class ChargerStationMapper {
     }
 
     public static ChargerStation toChargerStationDto(ChargerStationRequestDto chargerStationRequestDto) {
-/*        ChargerStation chargerStation = new ChargerStation();
-        chargerStation.setNameStation(chargerStationRequestDto.getNameStation());
-        chargerStation.setAddressStation(chargerStationRequestDto.getAddressStation());
-        chargerStation.setIsAvailableStation(chargerStationRequestDto.getIsAvailableStation());
-        chargerStation.setLatitude(chargerStationRequestDto.getLatitude());
-        chargerStation.setLongitude(chargerStationRequestDto.getLongitude());
-        return chargerStation;*/
         return ChargerStation.builder()
                 .nameStation(chargerStationRequestDto.getNameStation())
                 .addressStation(chargerStationRequestDto.getAddressStation())

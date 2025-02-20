@@ -21,12 +21,6 @@ public class ChargerController {
         this.chargerStationService = chargerStationService;
     }
 
-
-    @GetMapping("/hello")
-    public String hello() {
-        return "Hello from Charger Controller!";
-    }
-
     @GetMapping
     public ResponseEntity<List<ChargerStationResponseDto>> findAll() {
         List<ChargerStationResponseDto> chargerStationResponseDtos = chargerStationService.findAll();
@@ -41,7 +35,7 @@ public class ChargerController {
 
     @PostMapping("/create")
     public ResponseEntity<ChargerStationResponseDto> create(@Valid @RequestBody ChargerStationRequestDto chargerStationRequestDto) {
-        ChargerStationResponseDto chargerStationResponseDto =chargerStationService.create(chargerStationRequestDto);
+        ChargerStationResponseDto chargerStationResponseDto = chargerStationService.create(chargerStationRequestDto);
         return new ResponseEntity<>(chargerStationResponseDto, HttpStatus.CREATED);
     }
 
@@ -52,7 +46,7 @@ public class ChargerController {
     }
 
     @PutMapping("/{id}")
-    public ResponseEntity<Void> update(@PathVariable Long id, @RequestBody ChargerStationRequestDto chargerStationRequestDto) {
+    public ResponseEntity<Void> update(@Valid @PathVariable Long id, @RequestBody ChargerStationRequestDto chargerStationRequestDto) {
         chargerStationService.update(id, chargerStationRequestDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }

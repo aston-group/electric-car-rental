@@ -7,5 +7,6 @@ CREATE TABLE IF NOT EXISTS notifications
     booking_id BIGINT NOT NULL,
     type VARCHAR(50),
     message VARCHAR(512),
+    notification_status VARCHAR(52),
     created_on TIMESTAMP WITHOUT TIME ZONE NOT NULL
 );

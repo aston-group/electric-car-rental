@@ -8,7 +8,6 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.context.request.WebRequest;
-import org.springframework.web.server.ServerWebInputException;
 
 import java.text.SimpleDateFormat;
 import java.util.Date;
@@ -39,7 +38,7 @@ public class ErrorHandler {
     public Map<String, String> handleEventNotFound(final ServerRequestException e, WebRequest request) {
         log.error("Ошибка 500 ServerRequestException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
-        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+        return buildErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, e.getReason());
     }
 
     @ExceptionHandler
@@ -48,6 +47,14 @@ public class ErrorHandler {
         log.error("Ошибка 404 UserNotFoundException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler
+    @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
+    public Map<String, String> handleEventNotFound(final SendEmailException e, WebRequest request) {
+        log.error("Ошибка 503 SendEmailException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.SERVICE_UNAVAILABLE, e.getReason());
     }
 
     public Map<String, String> buildErrorResponse(Exception e, HttpStatus status, String reason) {

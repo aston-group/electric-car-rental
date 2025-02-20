@@ -30,3 +30,4 @@ build/
 
 ### VS Code ###
 .vscode/
+notifications/src/main/resources/api-keys.yaml

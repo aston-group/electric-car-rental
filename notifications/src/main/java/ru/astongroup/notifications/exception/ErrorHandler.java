@@ -27,7 +27,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleEventNotFound(final ClientRequestException e, WebRequest request) {
+    public Map<String, String> handleClientRequestExc(final ClientRequestException e, WebRequest request) {
         log.error("Ошибка 404 ClientRequestException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
@@ -35,7 +35,7 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.INTERNAL_SERVER_ERROR)
-    public Map<String, String> handleEventNotFound(final ServerRequestException e, WebRequest request) {
+    public Map<String, String> handleServerRequestExc(final ServerRequestException e, WebRequest request) {
         log.error("Ошибка 500 ServerRequestException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.INTERNAL_SERVER_ERROR, e.getReason());
@@ -43,15 +43,23 @@ public class ErrorHandler {
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.NOT_FOUND)
-    public Map<String, String> handleEventNotFound(final UserNotFoundException e, WebRequest request) {
+    public Map<String, String> handleUserNotFound(final UserNotFoundException e, WebRequest request) {
         log.error("Ошибка 404 UserNotFoundException: {} в запросе {}",
+                e.getMessage(), request.getDescription(false));
+        return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
+    }
+
+    @ExceptionHandler(NotificationNotFoundException.class)
+    @ResponseStatus(HttpStatus.NOT_FOUND)
+    public Map<String, String> handleNotificationNotFound(final NotificationNotFoundException e, WebRequest request) {
+        log.error("Ошибка 404 NotificationNotFoundException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.NOT_FOUND, e.getReason());
     }
 
     @ExceptionHandler
     @ResponseStatus(HttpStatus.SERVICE_UNAVAILABLE)
-    public Map<String, String> handleEventNotFound(final SendEmailException e, WebRequest request) {
+    public Map<String, String> handleEmailSendExc(final SendEmailException e, WebRequest request) {
         log.error("Ошибка 503 SendEmailException: {} в запросе {}",
                 e.getMessage(), request.getDescription(false));
         return buildErrorResponse(e, HttpStatus.SERVICE_UNAVAILABLE, e.getReason());

@@ -3,7 +3,9 @@ package ru.astongroup.notifications.service;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import ru.astongroup.notifications.client.UserClient;
+import ru.astongroup.notifications.dto.ChangeNotificationStatusDto;
 import ru.astongroup.notifications.dto.NotificationCreateDto;
 import ru.astongroup.notifications.dto.NotificationResponseDto;
 import ru.astongroup.notifications.dto.UserRequestDto;
@@ -11,13 +13,17 @@ import ru.astongroup.notifications.entity.EmailDetails;
 import ru.astongroup.notifications.entity.Notification;
 import ru.astongroup.notifications.entity.NotificationStatus;
 import ru.astongroup.notifications.entity.NotificationType;
+import ru.astongroup.notifications.exception.NotificationNotFoundException;
 import ru.astongroup.notifications.exception.UserNotFoundException;
 import ru.astongroup.notifications.mapper.NotificationMapper;
 import ru.astongroup.notifications.repository.NotificationRepository;
 
+import java.util.Collection;
+
 @Service
 @RequiredArgsConstructor
 @Slf4j
+@Transactional
 public class NotificationServiceImpl implements NotificationService {
 
     private final NotificationRepository notificationRepository;
@@ -39,6 +45,44 @@ public class NotificationServiceImpl implements NotificationService {
         return response;
     }
 
+    @Override
+    @Transactional(readOnly = true)
+    public Collection<NotificationResponseDto> getAll() {
+        log.info("Пытаюсь получит коллекцию уведомлений");
+        Collection<Notification> notifications = notificationRepository.findAll();
+        log.info("Коллекция уведомлений получена");
+        return notifications.stream().map(NotificationMapper::mapToResponseDto).toList();
+    }
+
+    @Override
+    @Transactional(readOnly = true)
+    public NotificationResponseDto getDtoById(Long notificationId) {
+        Notification notification = getById(notificationId);
+
+        return NotificationMapper.mapToResponseDto(notification);
+    }
+
+    // Изменяем статус уведомления
+    @Override
+    public NotificationResponseDto changeStatus(ChangeNotificationStatusDto dto) {
+        log.info("Пытаюсь поменять статус уведомления с id = {}", dto.getNotificationId());
+        Notification notification = getById(dto.getNotificationId());
+        notification.setStatus(dto.getStatus());
+        notificationRepository.save(notification);
+        log.info("Изменён статус уведомления с id = {} на {}", dto.getNotificationId(), dto.getStatus());
+
+        return NotificationMapper.mapToResponseDto(notification);
+    }
+
+    // Удаляем уведомление по id
+    @Override
+    public void deleteById(Long notificationId) {
+        log.info("Пытаюсь удалить уведомление с id = {}", notificationId);
+        Notification notification = getById(notificationId);
+        notificationRepository.delete(notification);
+        log.info("Удалено уведомление с id = {}", notificationId);
+    }
+
     // Метод будет отправлять уведомления в зависимости от полученного типа, наверное через свитч в будущем
     // Сейчас будет только отправка не почту
     public NotificationResponseDto sendNotification(NotificationCreateDto dto, String message) {
@@ -52,7 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
         return saveNotification(dto, message, status);
     }
 
-    // Отправляем голубя
+    // Упаковываем письмо и отправляем голубя
     public NotificationStatus sendEmail(String email, String message) {
         EmailDetails emailDetails = EmailDetails.builder()
                 .recipient(email)
@@ -70,5 +114,19 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = notificationRepository.save(NotificationMapper.matToNotification(dto, message, status));
         log.info("Сохранено уведомление для пользователя с id = {} на бронь с id = {}", dto.getUserId(), dto.getBookingId());
         return NotificationMapper.mapToResponseDto(notification);
+    }
+
+    // Получаем уведомление по id
+    public Notification getById(Long notificationId) {
+        log.info("Пытаюсь получить уведомление по id = {}", notificationId);
+        Notification notification = notificationRepository.findById(notificationId)
+                .orElseThrow(() -> {
+                    log.warn("Не удалось получить уведомление с id = {}", notificationId);
+                    return new NotificationNotFoundException(String
+                            .format("Уведомление с id = %d не найдено", notificationId));
+                });
+        log.info("Уведомление с id = {} получено", notificationId);
+
+        return notification;
     }
 }

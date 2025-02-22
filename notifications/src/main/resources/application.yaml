@@ -46,6 +46,15 @@ eureka:
   instance:
     preferIpAddress: true
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+
 logging:
   level:
     org.springframework.orm.jpa: DEBUG

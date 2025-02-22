@@ -22,4 +22,8 @@ public class CarService {
         return carMapper.toDTO(savedCar);
     }
 
+    public CarCreateDTO getById(long id) {
+        Car car = carRepository.getById(id);
+        return carMapper.toDTO(car);
+    }
 }

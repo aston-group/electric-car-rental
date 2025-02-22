@@ -21,4 +21,9 @@ public class CarController {
     public CarCreateDTO createCar(@RequestBody CarCreateDTO carCreateDTO){
         return carService.createCar(carCreateDTO);
     }
+
+    @GetMapping("/get/{id}")
+    public CarCreateDTO getCarById(@PathVariable long id) {
+        return carService.getById(id);
+    }
 }

@@ -11,10 +11,12 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 import ru.astongroup.notifications.dto.ChangeNotificationStatusDto;
 import ru.astongroup.notifications.dto.NotificationCreateDto;
 import ru.astongroup.notifications.dto.NotificationResponseDto;
+import ru.astongroup.notifications.entity.NotificationStatus;
 import ru.astongroup.notifications.service.NotificationService;
 
 import java.util.Collection;
@@ -38,6 +40,14 @@ public class NotificationController {
         NotificationResponseDto notification = notificationService.getDtoById(notificationId);
 
         return new ResponseEntity<>(notification, HttpStatus.ACCEPTED);
+    }
+
+    @GetMapping("/status")
+    public ResponseEntity<Collection<NotificationResponseDto>> findByStatus(
+            @RequestParam(defaultValue = "SUCCESS") NotificationStatus status) {
+        Collection<NotificationResponseDto> notifications = notificationService.getByStatus(status);
+
+        return new ResponseEntity<>(notifications, HttpStatus.ACCEPTED);
     }
 
     @PatchMapping

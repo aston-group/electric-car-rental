@@ -19,6 +19,7 @@ import ru.astongroup.notifications.mapper.NotificationMapper;
 import ru.astongroup.notifications.repository.NotificationRepository;
 
 import java.util.Collection;
+import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -81,6 +82,17 @@ public class NotificationServiceImpl implements NotificationService {
         Notification notification = getById(notificationId);
         notificationRepository.delete(notification);
         log.info("Удалено уведомление с id = {}", notificationId);
+    }
+
+    // Получим коллекцию с нужным статусом. Фильтранём в репозитории через Query
+    // Нужно подумать как это можно сделать лучше, нужна ли регистронезависимость
+    @Override
+    public Collection<NotificationResponseDto> getByStatus(NotificationStatus status) {
+        log.info("Пытаюсь получить все записи со статусом =  {}", status);
+        Collection<Notification> notifications = notificationRepository.finAllByStatus(status);
+        log.info("Получены записи со статусом =  {}", status);
+
+        return notifications.stream().map(NotificationMapper::mapToResponseDto).toList();
     }
 
     // Метод будет отправлять уведомления в зависимости от полученного типа, наверное через свитч в будущем

@@ -11,9 +11,9 @@ public class CarMapper {
         CarCreateDTO carCreateDTO = new CarCreateDTO();
         carCreateDTO.setModel(savedCar.getModel());
         carCreateDTO.setManufacturer(savedCar.getManufacturer());
-        carCreateDTO.setBatteryCapacityInKWh(savedCar.getBatteryCapacityInKWh());
-        carCreateDTO.setMileageInKilometers(savedCar.getMileageInKilometers());
-        carCreateDTO.setRangeInKilometers(savedCar.getRangeInKilometers());
+        carCreateDTO.setBattery_capacity_in_kwh(savedCar.getBattery_capacity_in_kwh());
+        carCreateDTO.setMileage_in_kilometers(savedCar.getMileage_in_kilometers());
+        carCreateDTO.setRange_in_kilometers(savedCar.getRange_in_kilometers());
         carCreateDTO.setStatus(savedCar.getStatus());
         carCreateDTO.setCostPerMinute(savedCar.getCostPerMinute());
         carCreateDTO.setIssues(savedCar.getIssues());
@@ -24,9 +24,9 @@ public class CarMapper {
         Car car = new Car();
         car.setModel(carCreateDTO.getModel());
         car.setManufacturer(carCreateDTO.getManufacturer());
-        car.setBatteryCapacityInKWh(carCreateDTO.getBatteryCapacityInKWh());
-        car.setMileageInKilometers(carCreateDTO.getMileageInKilometers());
-        car.setRangeInKilometers(carCreateDTO.getRangeInKilometers());
+        car.setBattery_capacity_in_kwh(carCreateDTO.getBattery_capacity_in_kwh());
+        car.setMileage_in_kilometers(carCreateDTO.getMileage_in_kilometers());
+        car.setRange_in_kilometers(carCreateDTO.getRange_in_kilometers());
         car.setStatus(carCreateDTO.getStatus());
         car.setCostPerMinute(carCreateDTO.getCostPerMinute());
         car.setIssues(carCreateDTO.getIssues());

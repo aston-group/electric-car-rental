@@ -3,6 +3,7 @@ package ru.astongroup.notifications.exception;
 import jakarta.validation.ValidationException;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
+import org.springframework.http.converter.HttpMessageNotReadableException;
 import org.springframework.web.bind.MethodArgumentNotValidException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -17,7 +18,10 @@ import java.util.Map;
 @RestControllerAdvice
 @Slf4j
 public class ErrorHandler {
-    @ExceptionHandler({MethodArgumentNotValidException.class, ValidationException.class, NumberFormatException.class})
+    @ExceptionHandler({MethodArgumentNotValidException.class,
+            ValidationException.class,
+            NumberFormatException.class,
+            HttpMessageNotReadableException.class})
     @ResponseStatus(HttpStatus.BAD_REQUEST)
     public Map<String, String> invalidMethodArgument(Exception e, WebRequest request) {
         log.error("Ошибка 400 {}: {} в запросе {}",

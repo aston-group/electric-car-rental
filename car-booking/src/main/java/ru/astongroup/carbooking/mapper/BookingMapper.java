@@ -1,43 +1,33 @@
 package ru.astongroup.carbooking.mapper;
 
-import ru.astongroup.carbooking.dto.BookingDto;
+import org.springframework.stereotype.Service;
+import ru.astongroup.carbooking.dto.BookingReqCreateDto;
+import ru.astongroup.carbooking.dto.BookingResponseDTO;
 import ru.astongroup.carbooking.entity.Booking;
 
+@Service
 public class BookingMapper {
 
-    public static BookingDto toBookingDto(Booking booking) {
-        if (booking == null) {
-            return null;
-        }
-
-        BookingDto BookingDto = new BookingDto();
-
-        BookingDto.setId(booking.getId());
-        BookingDto.setUserId(booking.getUserId());
-        BookingDto.setCarId(booking.getCarId());
-        BookingDto.setStartTime(booking.getStartTime());
-        BookingDto.setEndTime(booking.getEndTime());
-        BookingDto.setStatus(booking.getStatus());
-        BookingDto.setPrice(booking.getPrice());
-
-        return BookingDto;
+    public Booking toBookingEntity(BookingReqCreateDto bookingReqCreateDto) {
+        return Booking.builder()
+                .userId(bookingReqCreateDto.getUserId())
+                .carId(bookingReqCreateDto.getCarId())
+                .startTime(bookingReqCreateDto.getStartTime())
+                .endTime(bookingReqCreateDto.getEndTime())
+                .build();
     }
 
-    public static Booking toBookingEntity(BookingDto bookingDto) {
-        if (bookingDto == null) {
-            return null;
-        }
-
-        Booking booking = new Booking();
-
-        booking.setId(bookingDto.getId());
-        booking.setUserId(bookingDto.getUserId());
-        booking.setCarId(bookingDto.getCarId());
-        booking.setStartTime(bookingDto.getStartTime());
-        booking.setEndTime(bookingDto.getEndTime());
-        booking.setStatus(bookingDto.getStatus());
-        booking.setPrice(bookingDto.getPrice());
-
-        return booking;
+    public BookingResponseDTO toBookingResponseDto(Booking booking) {
+        return BookingResponseDTO.builder()
+                .id(booking.getId())
+                .userId(booking.getUserId())
+                .carId(booking.getCarId())
+                .startTime(booking.getStartTime())
+                .endTime(booking.getEndTime())
+                .status(booking.getStatus())
+                .price(booking.getPrice())
+                .build();
     }
 }
+
+

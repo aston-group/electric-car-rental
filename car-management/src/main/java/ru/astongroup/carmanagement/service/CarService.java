@@ -22,6 +22,7 @@ public class CarService {
 
     @Transactional
     public CarCreateDTO createCar(CarCreateDTO carCreateDTO) {
+        log.info("Добавление нового автомобиля");
         Car product = carMapper.toEntity(carCreateDTO);
         Car savedCar = carRepository.save(product);
         return carMapper.toDTO(savedCar);
@@ -33,6 +34,7 @@ public class CarService {
     }
 
     public List<CarCreateDTO> getAllCars() {
+        log.info("Получение списка автомобилей.");
         return carRepository.findAll()
                 .stream()
                 .map(carMapper::toDTO)
@@ -40,6 +42,7 @@ public class CarService {
     }
 
     public void deleteCar(Long id) {
+        log.info("Удаление автомобиля с id = {}", id);
         carRepository.deleteById(id);
     }
 }

@@ -1,4 +1,4 @@
-INSERT INTO cars (model, manufacturer, battery_capacity_in_kwh, mileage_in_kilometers, range_in_kilometers, status, costPerMinute, issues)
+INSERT INTO cars (model, manufacturer, battery_capacity_in_kwh, mileage_in_kilometers, range_in_kilometers, status, cost_per_minute, issues)
             VALUES ('Tesla Model 3', 'Tesla', 57.5, 1500, 614, 'Available', 5, 'Без особенностей'),
                     ('Tesla Model Y', 'Tesla', 75, 35500, 531, 'Booked', 8, 'Царапина на задней правой двери.'),
                     ('Nissan Leaf', 'Nissan', 40, 12000, 385, 'In Use', 3, 'Без особенностей'),

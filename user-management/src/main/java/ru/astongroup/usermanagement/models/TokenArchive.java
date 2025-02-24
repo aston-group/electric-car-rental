@@ -41,4 +41,16 @@ public class TokenArchive {
 
     @Column(name = "username")
     private String username;
+
+    @Override
+    public String toString() {
+        return "TokenArchive{" +
+                "id=" + id +
+                ", token='" + token + '\'' +
+                ", userid=" + userid +
+                ", created=" + created +
+                ", expired=" + expired +
+                ", username='" + username + '\'' +
+                '}';
+    }
 }

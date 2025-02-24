@@ -1,6 +1,7 @@
 package ru.astongroup.usermanagement.components;
 
 import java.util.List;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -11,11 +12,18 @@ import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.utils.security.PasswordHashing;
 
+@Slf4j
 public class CustomAuthenticationManager implements AuthenticationManager {
+
+    //Для разрешения проблем с тестами поменял статические методы на нестатические
+    //и создал локальный объект
+    //имя переменной с больошой буквы, чтоб не было геморроя с переписыванием кода
+    private PasswordHashing PasswordHashing = new PasswordHashing();
 
     @Override
     public Authentication authenticate(Authentication authentication) throws AuthenticationException {
 
+        log.info("-------------------------\nCustomAuthenticationManager.authenticate\nВход в метод authenticate\n-------------------------");
         String password = authentication.getName();
         var user = (UserModel) authentication.getCredentials();
 
@@ -25,9 +33,11 @@ public class CustomAuthenticationManager implements AuthenticationManager {
             var userStatus = user.getUserStatus();
             var authorities = List.of(new SimpleGrantedAuthority(userStatus.toString()));
 
+            log.info("-------------------------\nCustomAuthenticationManager.authenticate\nUser: " + user.getUsername() + " has been authenticated\n-------------------------");
             return new UsernamePasswordAuthenticationToken(user, null, authorities);
         }
         else  {
+            log.info("-------------------------\nCustomAuthenticationManager.authenticate\nUser: " + user.getUsername() + " has not been authenticated\n-------------------------");
             throw new AuthenticationException(StaticResources.INVALID_USERNAME_OR_PASSWORD_EXCEPTION_MESSAGE) {
             };
         }

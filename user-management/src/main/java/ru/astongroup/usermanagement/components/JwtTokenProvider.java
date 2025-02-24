@@ -1,23 +1,27 @@
 package ru.astongroup.usermanagement.components;
 
+import java.util.Date;
+import java.util.function.Function;
 import java.security.Key;
 import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
 import io.jsonwebtoken.security.Keys;
 import io.jsonwebtoken.SignatureAlgorithm;
 import java.nio.charset.StandardCharsets;
+
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
 
 import ru.astongroup.usermanagement.models.UserModel;
+import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.utils.StaticResources;
 
-import java.util.Date;
-import java.util.function.Function;
-
+@Slf4j
 @Component
 public class JwtTokenProvider {
 
     public String getToken(UserModel userDetails) {
+        log.info("-------------------------\nJwtTokenProvider.getToken\nВход в метод, генерируем токен {}\n-------------------------", userDetails.getEmail());
         return Jwts.builder()
                 .setSubject(userDetails.getEmail())
                 .claim("roles", userDetails.getUserStatus().toString())
@@ -32,27 +36,32 @@ public class JwtTokenProvider {
     }
 
     public String getUsernameFromToken(String token) {
+        log.info("-------------------------\nJwtTokenProvider.getUsernameFromToken\nGetting username from token\n-------------------------");
         return getClaimFromToken(token, Claims::getSubject);
     }
 
     public <T> T getClaimFromToken(String token, Function<Claims, T> claimsResolver) {
 
         final Claims claims = validateAndExtractClaims(token);
+        log.info("-------------------------\nJwtTokenProvider.getClaimFromToken\nGetting claims from token\n-------------------------");
         return claimsResolver.apply(claims);
     }
 
     public boolean isTokenExpired(String token) {
         final Date expiration = getExpirationDateFromToken(token);
+        log.info("-------------------------\nJwtTokenProvider.isTokenExpired\nChecking if token is expired\n-------------------------");
         return expiration.before(new Date());
     }
 
     public Date getExpirationDateFromToken(String token) {
+        log.info("-------------------------\nJwtTokenProvider.getExpirationDateFromToken\nGetting expiration date from token\n-------------------------");
         return getClaimFromToken(token, Claims::getExpiration);
     }
 
-    public boolean validateToken(String token, UserModel userDetails) {
+    public boolean validateToken(String token, UserDto userDto) {
         final String username = getUsernameFromToken(token);
-        return (username.equals(userDetails.getUsername()) && !isTokenExpired(token));
+        log.info("-------------------------\nJwtTokenProvider.validateToken\nValidating token (Boolean)\n-------------------------");
+        return (username.equals(userDto.getEmail()) && !isTokenExpired(token));
     }
 
     public Claims validateAndExtractClaims(String token) {
@@ -60,12 +69,14 @@ public class JwtTokenProvider {
         Key key = Keys.hmacShaKeyFor(StaticResources.JWT_SECRET.getBytes(StandardCharsets.UTF_8));
 
         try {
+            log.info("-------------------------\nJwtTokenProvider.validateAndExtractClaims\nValidating token: return Claims\n-------------------------");
             return Jwts.parser()
                     .setSigningKey(key)
                     .build()
                     .parseClaimsJws(token)
                     .getBody();
         } catch (Exception e) {
+            log.error("-------------------------\nJwtTokenProvider.validateAndExtractClaims\nToken is not valid. Invalid JWT signature: {}\n-------------------------", e.getMessage());
             throw new IllegalArgumentException("Invalid JWT signature");
         }
     }

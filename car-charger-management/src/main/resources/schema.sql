@@ -17,7 +17,7 @@ CREATE TABLE IF NOT EXISTS chargersessions
     station_id BIGINT REFERENCES chargerstations(station_id),
     start_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
     end_time TIMESTAMP WITHOUT TIME ZONE NOT NULL,
-    car_id BIGINT NOT NULL
+    user_id BIGINT NOT NULL
 );
 
 

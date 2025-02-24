@@ -7,7 +7,6 @@ import ru.astongroup.carmanagement.dto.CarUpdateDTO;
 import ru.astongroup.carmanagement.entity.Car;
 import ru.astongroup.carmanagement.entity.CarStatus;
 
-//@Component
 public class CarMapper {
 
     public static CarCreateDTO toDTO(Car savedCar) {

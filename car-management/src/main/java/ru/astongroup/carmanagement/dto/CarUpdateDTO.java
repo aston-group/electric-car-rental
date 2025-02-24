@@ -1,6 +1,7 @@
 package ru.astongroup.carmanagement.dto;
 
 import jakarta.validation.constraints.NotBlank;
+import jakarta.validation.constraints.NotNull;
 import lombok.Data;
 
 import java.math.BigDecimal;
@@ -22,7 +23,7 @@ public class CarUpdateDTO {
     @NotBlank
     private String status;
 
-    @NotBlank
+    @NotNull
     private BigDecimal costPerMinute; //Cost per minute of rental
 
     private String issues;

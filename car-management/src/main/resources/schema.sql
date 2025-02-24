@@ -8,7 +8,7 @@ CREATE TABLE IF NOT EXISTS cars
     battery_capacity_in_kwh DOUBLE PRECISION,
     mileage_in_kilometers INTEGER,
     range_in_kilometers INTEGER,
-    status VARCHAR(254) NOT NULL,
+    status SMALLINT NOT NULL,
     cost_per_minute NUMERIC(10, 2),
     issues TEXT
 );

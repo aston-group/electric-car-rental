@@ -1,5 +1,6 @@
 package ru.astongroup.carmanagement.controller;
 
+import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
@@ -21,7 +22,7 @@ public class CarController {
     }
 
     @PostMapping("/create")
-    public ResponseEntity<CarCreateDTO> createCar(@RequestBody CarCreateDTO carCreateDTO) {
+    public ResponseEntity<CarCreateDTO> createCar(@Valid @RequestBody CarCreateDTO carCreateDTO) {
         return ResponseEntity.ok(carService.createCar(carCreateDTO));
     }
 

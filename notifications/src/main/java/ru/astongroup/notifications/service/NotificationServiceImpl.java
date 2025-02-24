@@ -17,6 +17,7 @@ import ru.astongroup.notifications.exception.NotificationNotFoundException;
 import ru.astongroup.notifications.exception.UserNotFoundException;
 import ru.astongroup.notifications.mapper.NotificationMapper;
 import ru.astongroup.notifications.repository.NotificationRepository;
+import ru.astongroup.notifications.util.EmailMessages;
 
 import java.util.Collection;
 import java.util.List;
@@ -34,16 +35,15 @@ public class NotificationServiceImpl implements NotificationService {
 
     @Override
     public NotificationResponseDto createNotification(NotificationCreateDto dto) {
-        NotificationResponseDto response = NotificationResponseDto.builder().build();
-        // нужно разнести текст по константам в другой класс
-        // ну и причесать весь код нормально
-        switch (dto.getNotificationType()) {
-            case NotificationType.NEW_BOOKING -> response = sendNotification(dto, "Новое бронирование");
-            case NotificationType.CONFIRMED_BOOKING -> response = sendNotification(dto, "Бронь подтверждена");
-            case NotificationType.REJECTED_BOOKING -> response = sendNotification(dto, "Бронь отменена");
-        }
-
-        return response;
+        log.info("Начинаю отправку уведомления пользователю с id = {}", dto.getUserId());
+        UserRequestDto user = userClient.getUserById(dto.getUserId())
+                .orElseThrow(() -> {
+                    log.warn("Пользователь с id = {} не найден", dto.getUserId());
+                    return new UserNotFoundException(String.format("Пользователь с id = %d не найден", dto.getUserId()));
+                });
+        String message = EmailMessages.createMessage(user, dto.getNotificationType());
+        NotificationStatus status = sendEmail(user.getEmail(), message);
+        return saveNotification(dto, message, status);
     }
 
     @Override
@@ -93,19 +93,6 @@ public class NotificationServiceImpl implements NotificationService {
         log.info("Получены записи со статусом =  {}", status);
 
         return notifications.stream().map(NotificationMapper::mapToResponseDto).toList();
-    }
-
-    // Метод будет отправлять уведомления в зависимости от полученного типа, наверное через свитч в будущем
-    // Сейчас будет только отправка не почту
-    public NotificationResponseDto sendNotification(NotificationCreateDto dto, String message) {
-        log.info("Начинаю отправку уведомления пользователю с id = {}", dto.getUserId());
-        UserRequestDto user = userClient.getUserById(dto.getUserId())
-                .orElseThrow(() -> {
-                    log.warn("Пользователь с id = {} не найден", dto.getUserId());
-                    return new UserNotFoundException(String.format("Пользователь с id = %d не найден", dto.getUserId()));
-                });
-        var status = sendEmail(user.getEmail(), message);
-        return saveNotification(dto, message, status);
     }
 
     // Упаковываем письмо и отправляем голубя

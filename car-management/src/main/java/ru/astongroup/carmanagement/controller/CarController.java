@@ -16,11 +16,6 @@ import java.util.List;
 public class CarController {
     private final CarService carService;
 
-    @GetMapping("/hello")
-    public String helloInit() {
-        return "Hello from Car Controller!!!";
-    }
-
     @PostMapping("/create")
     public ResponseEntity<CarCreateDTO> createCar(@Valid @RequestBody CarCreateDTO carCreateDTO) {
         return ResponseEntity.ok(carService.createCar(carCreateDTO));

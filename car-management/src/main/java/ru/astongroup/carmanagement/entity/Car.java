@@ -25,20 +25,20 @@ public class Car {
     private String manufacturer;
 
     @Column(name = "battery_capacity_in_kwh")
-    private double battery_capacity_in_kwh; // kWh
+    private double batteryCapacityInKwh; // kWh
 
     @Column(name = "mileage_in_kilometers")
-    private int mileage_in_kilometers;
+    private int mileageInKilometers;
 
     @Column(name = "range_in_kilometers")
-    private int range_in_kilometers;
+    private int rangeInKilometers;
 
     @Column(name = "status")
     @Enumerated(EnumType.ORDINAL)
     private CarStatus status; //
 
     @Column(name = "cost_per_minute")
-    private BigDecimal cost_per_minute; //Cost per minute of rental
+    private BigDecimal costPerMinute; //Cost per minute of rental
 
     @Column(name = "issues")
     private String issues;

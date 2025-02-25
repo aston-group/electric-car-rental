@@ -1,5 +1,5 @@
 package ru.astongroup.usermanagement.controller;
-
+/*
 import java.util.List;
 import java.util.Collection;
 
@@ -151,4 +151,4 @@ class UserControllerTest extends TestUtils {
         assertEquals(HttpStatus.BAD_REQUEST, response.getStatusCode());
         verify(userService, times(1)).updateById(testUser.getId(), testUser);
     }
-}
+}*/

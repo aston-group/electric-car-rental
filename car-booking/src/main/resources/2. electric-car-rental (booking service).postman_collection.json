@@ -16,7 +16,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"userId\": 3,\r\n  \"carId\": 531,\r\n  \"startTime\": \"2025-03-01T17:00:00\",\r\n  \"endTime\": \"2025-03-01T18:17:00\"\r\n}",
+					"raw": "{\r\n  \"userId\": 1,\r\n  \"carId\": 2,\r\n  \"startTime\": \"2025-03-01T17:00:00\",\r\n  \"endTime\": \"2025-03-01T18:03:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -24,12 +24,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8085/bookings",
+					"raw": "http://localhost:8086/bookings",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8085",
+					"port": "8086",
 					"path": [
 						"bookings"
 					]
@@ -47,7 +47,7 @@
 				"header": [],
 				"body": {
 					"mode": "raw",
-					"raw": "{\r\n  \"startTime\": \"2025-03-02T15:00:00\",\r\n  \"endTime\": \"2025-03-02T16:08:00\"\r\n}",
+					"raw": "{\r\n    \"userId\": 1,\r\n    \"carId\": 3,\r\n    \"startTime\": \"2025-03-02T15:00:00\",\r\n    \"endTime\": \"2025-03-02T15:38:00\"\r\n}",
 					"options": {
 						"raw": {
 							"language": "json"
@@ -55,12 +55,12 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/bookings/1",
+					"raw": "http://localhost:8086/bookings/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8086",
 					"path": [
 						"bookings",
 						"1"
@@ -78,15 +78,15 @@
 				"method": "PUT",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/bookings/2/confirm",
+					"raw": "http://localhost:8086/bookings/1/confirm",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8086",
 					"path": [
 						"bookings",
-						"2",
+						"1",
 						"confirm"
 					]
 				}
@@ -102,12 +102,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/bookings/1/price",
+					"raw": "http://localhost:8086/bookings/1/price",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8086",
 					"path": [
 						"bookings",
 						"1",
@@ -123,12 +123,12 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8085/bookings",
+					"raw": "http://localhost:8086/bookings",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8085",
+					"port": "8086",
 					"path": [
 						"bookings"
 					]
@@ -145,16 +145,16 @@
 				"method": "GET",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/bookings/user/2",
+					"raw": "http://localhost:8086/bookings/user/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8086",
 					"path": [
 						"bookings",
 						"user",
-						"2"
+						"1"
 					]
 				}
 			},
@@ -169,12 +169,12 @@
 				"method": "DELETE",
 				"header": [],
 				"url": {
-					"raw": "http://localhost:8080/bookings/1",
+					"raw": "http://localhost:8086/bookings/1",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8086",
 					"path": [
 						"bookings",
 						"1"

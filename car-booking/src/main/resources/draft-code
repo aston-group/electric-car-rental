@@ -1,0 +1,11 @@
+    //здесь нужно брать стоимость с таблицы машин стоимость за минуту когда админ создавать будет
+    private double calculatePrice(Long carId, LocalDateTime start, LocalDateTime end) {
+        long minutes = Duration.between(start, end).toMinutes();
+
+//        CarCreateDTO carCreateDTO = carClient.getCarById(carId).get();
+//        BigDecimal costPerMinute = carCreateDTO.getCostPerMinute();
+
+//        double result = costPerMinute.multiply(BigDecimal.valueOf(minutes)).doubleValue();
+
+        return minutes * PRICE_PER_MINUTE;
+    }

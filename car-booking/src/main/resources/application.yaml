@@ -1,5 +1,9 @@
+car-management.url: http://localhost:8083
+user-management.url: http://localhost:8080/users
+
+
 server:
-  port: 8085
+  port: 8086
 
 spring:
   datasource:
@@ -25,7 +29,8 @@ spring:
 eureka:
   client:
     service-url:
-      defaultZone: http://discovery-server:8761/eureka/
+#      defaultZone: http://discovery-server:8761/eureka/
+        defaultZone: http://localhost:8080/
   instance:
     preferIpAddress: true
 

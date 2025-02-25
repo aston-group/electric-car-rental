@@ -5,8 +5,11 @@ import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import ru.astongroup.carbooking.dto.BookingDto;
+import ru.astongroup.carbooking.dto.BookingReqCreateDto;
+import ru.astongroup.carbooking.dto.BookingReqUpdateDto;
+import ru.astongroup.carbooking.dto.BookingResponseDTO;
 import ru.astongroup.carbooking.service.BookingService;
+
 import java.util.Collection;
 
 @Slf4j
@@ -19,16 +22,16 @@ public class BookingController {
 
     //1 создание брони
     @PostMapping
-    public ResponseEntity<BookingDto> createBooking(@Valid @RequestBody BookingDto bookingDto) {
-        return ResponseEntity.ok(bookingService.createBooking(bookingDto));
+    public ResponseEntity<BookingResponseDTO> createBooking(@Valid @RequestBody BookingReqCreateDto bookingReqCreateDto) {
+        return ResponseEntity.ok(bookingService.createBooking(bookingReqCreateDto));
     }
 
     //2 редактирование брони
     @PutMapping("/{id}")
-    public ResponseEntity<BookingDto> updateBooking(
+    public ResponseEntity<BookingResponseDTO> updateBooking(
             @PathVariable(name = "id") Long id,
-            @RequestBody BookingDto bookingDto) {
-        return ResponseEntity.ok(bookingService.updateBooking(id, bookingDto));
+            @Valid @RequestBody BookingReqUpdateDto bookingReqUpdateDto) {
+        return ResponseEntity.ok(bookingService.updateBooking(id, bookingReqUpdateDto));
     }
 
     //3 отмена брони
@@ -46,23 +49,23 @@ public class BookingController {
 
     //5 получить бронирования по ИД юзера
     @GetMapping("/user/{userId}")
-    public ResponseEntity<Collection<BookingDto>> getBookingsByUserId(@PathVariable Long userId) {
+    public ResponseEntity<Collection<BookingResponseDTO>> getBookingsByUserId(@PathVariable Long userId) {
         log.info("Запрос на получение бронирований для userId={}", userId);
-        Collection<BookingDto> bookingsDto = bookingService.getBookingsByUserId(userId);
-        return ResponseEntity.ok(bookingsDto);
+        Collection<BookingResponseDTO> bookingsResponseDto = bookingService.getBookingsByUserId(userId);
+        return ResponseEntity.ok(bookingsResponseDto);
     }
 
     //6 подтверждение бронирования администратором
     @PutMapping("/{bookingId}/confirm")
-    public ResponseEntity<BookingDto> confirmBooking(@PathVariable Long bookingId) {
+    public ResponseEntity<BookingResponseDTO> confirmBooking(@PathVariable Long bookingId) {
         log.info("Запрос на подтверждение бронирования bookingId={}", bookingId);
-        BookingDto confirmedBooking = bookingService.confirmBooking(bookingId);
+        BookingResponseDTO confirmedBooking = bookingService.confirmBooking(bookingId);
         return ResponseEntity.ok(confirmedBooking);
     }
 
     //7 получить все букинги, но это только надо будет для админа опцию сделать
     @GetMapping()
-    public Collection<BookingDto> findAll() {
+    public Collection<BookingResponseDTO> findAll() {
         return bookingService.findAll();
     }
 }

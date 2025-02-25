@@ -1,6 +1,7 @@
 package ru.astongroup.usermanagement.models;
 
 import java.util.Date;
+
 import java.util.List;
 import java.util.Collection;
 
@@ -21,6 +22,7 @@ import ru.astongroup.usermanagement.models.enums.UserStatus;
 @RequiredArgsConstructor
 @Table(name = "users")
 public class UserModel implements UserDetails {
+
     @Id
     @Column(name = "id", columnDefinition = "bigserial")
     @GeneratedValue(strategy = GenerationType.IDENTITY)
@@ -66,6 +68,7 @@ public class UserModel implements UserDetails {
     }
 
     @Override
+
     public String getUsername() {
         return email;
     }

@@ -3,11 +3,13 @@ package ru.astongroup.usermanagement.utils.exceptions.global;
 import java.util.Date;
 
 import lombok.extern.slf4j.Slf4j;
+
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import jakarta.servlet.http.HttpServletRequest;
 
 import org.springframework.http.HttpStatus;
+
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ResponseBody;
 import org.springframework.web.bind.annotation.ResponseStatus;
@@ -56,7 +58,6 @@ public class GlobalExceptionHandler {
 
         return error;
     }
-
     @ExceptionHandler(EmailAlreadyBusyException.class)
     public ResponseEntity<String> handleEmailAlreadyBusyException(EmailAlreadyBusyException e) {
         log.error(e.getMessage());

@@ -15,6 +15,7 @@ import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.repositories.UserRepository;
 import ru.astongroup.usermanagement.utils.mapper.UserMapper;
+
 import ru.astongroup.usermanagement.utils.security.PasswordHashing;
 import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
 import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
@@ -135,6 +136,7 @@ public class UserService implements UserDetailsService {
         existingUser.setLastName(newLastName);
         existingUser.setPhone(newPhone);
         existingUser.setImage(newImage);
+
 
         log.info("Поля пользователя id: {}, name: {}, lastName: {}, phone: {}, image: {} обновлены. Ожидает сохранения", existingUser.getId(), newName, newLastName, newPhone, newImage);
         return existingUser;

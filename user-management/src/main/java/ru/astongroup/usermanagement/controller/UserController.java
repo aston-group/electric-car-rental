@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.security.core.Authentication;
 import org.springframework.web.bind.annotation.*;
 
+
 import ru.astongroup.usermanagement.components.JwtTokenProvider;
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
@@ -143,4 +144,44 @@ public class UserController {
         log.info("Проверка валидации токена: {}", token);
         return tokenProvider.validateToken(token, userDto);
     }
+
+
+    @PostMapping("/create")
+    public Boolean register(@RequestBody UserModel user) {
+
+        return userService.create(user);
+    }
+
+    @GetMapping
+    public Iterable<UserDto> getAllUsers() {
+
+        return userService.getAll();
+    }
+
+    @GetMapping("/mail/{email}")
+    public UserDto getUserByEmail(@PathVariable String email) {
+
+        return userService.getByEmail(email);
+    }
+
+    @GetMapping("/{id}")
+    public UserDto getUserById(@PathVariable long id) {
+
+        return userService.getById(id);
+    }
+    @PutMapping("/update/{id}")
+    public boolean updateUserById(
+            @PathVariable long id,
+            @RequestBody UserModel user) {
+
+        return userService.updateById(id, user);
+    }
+
+    @DeleteMapping("/delete/{id}")
+    public boolean deleteUserById(@PathVariable long id) {
+
+        return userService.deleteById(id);
+    }
+
+
 }

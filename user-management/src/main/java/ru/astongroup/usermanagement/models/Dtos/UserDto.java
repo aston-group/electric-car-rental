@@ -14,6 +14,7 @@ import ru.astongroup.usermanagement.models.enums.UserStatus;
 @AllArgsConstructor
 @NoArgsConstructor
 public class UserDto {
+
     private long id;
     private String name;
     private String lastName;

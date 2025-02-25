@@ -3,14 +3,16 @@ server:
 
 spring:
   datasource:
+
+    ################################################################
     driver-class-name: org.postgresql.Driver
-    url: jdbc:postgresql://localhost:6541/user_management
-    username: user
-    password: user
+    #url: jdbc:postgresql://localhost:6541/user_management
+    #username: user
+    #password: user
   #########################################################################
-    #url: jdbc:postgresql://localhost:5432/postgres
-    #username: postgres
-    #password: 1331
+    url: jdbc:postgresql://localhost:5432/postgres
+    username: postgres
+    password: 1331
 
   application:
     name: user-management
@@ -39,6 +41,31 @@ eureka:
       defaultZone: http://discovery-server:8761/eureka/
   instance:
     preferIpAddress: true
+
+  #security:
+    #user:
+      #name: user
+      #password: password
+    #oauth2:
+      #authorizationserver:
+        #client:
+          #oidc-client:
+            #registration:
+              #client-id: "oidc-client"
+              #client-secret: "{noop}secret"
+              #client-authentication-methods:
+                #- "client_secret_basic"
+              #authorization-grant-types:
+                #- "authorization_code"
+                #- "refresh_token"
+              #redirect-uris:
+                #- "http://127.0.0.1:8080/login/oauth2/code/oidc-client"
+              #post-logout-redirect-uris:
+                #- "http://127.0.0.1:8080/"
+              #scopes:
+                #- "openid"
+                #- "profile"
+            #require-authorization-consent: true
 
 logging:
   level:

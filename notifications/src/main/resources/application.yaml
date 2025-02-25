@@ -1,3 +1,5 @@
+user-management.url: http://localhost:8080/users
+
 server:
   port: 8082
 
@@ -9,6 +11,9 @@ spring:
     password: user
   application:
     name: notifications
+
+  config:
+    import: classpath:api-keys.yaml
 
   jpa:
     hibernate:
@@ -22,6 +27,18 @@ spring:
     init:
       mode: always
 
+  mail:
+    host: smtp.gmail.com
+    port: 587
+    username: ${mail_api.username}
+    password: ${mail_api.password}
+    properties:
+      mail:
+        smtp:
+          auth: true
+          starttls:
+            enable: true
+
 eureka:
   client:
     service-url:
@@ -29,8 +46,17 @@ eureka:
   instance:
     preferIpAddress: true
 
+springdoc:
+  api-docs:
+    enabled: true
+  swagger-ui:
+    path: /swagger-ui.html
+    operationsSorter: method
+    tagsSorter: alpha
+
+
 logging:
   level:
-    org.springframework.orm.jpa: INFO
-    org.springframework.transaction: INFO
-    org.springframework.web: INFO
+    org.springframework.orm.jpa: DEBUG
+    org.springframework.transaction: DEBUG
+    org.springframework.web: DEBUG

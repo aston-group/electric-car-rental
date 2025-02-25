@@ -11,6 +11,7 @@ spring:
     name: car-management
 
   jpa:
+    defer-datasource-initialization: true
     hibernate:
       ddl-auto: none
     properties:

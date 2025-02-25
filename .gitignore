@@ -1,4 +1,9 @@
 target/
+.gigaide
+.mvn
+.idea
+keykloack/
+keycloak/
 !.mvn/wrapper/maven-wrapper.jar
 !**/src/main/**/target/
 !**/src/test/**/target/
@@ -30,3 +35,4 @@ build/
 
 ### VS Code ###
 .vscode/
+notifications/src/main/resources/api-keys.yaml

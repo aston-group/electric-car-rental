@@ -1,66 +1,79 @@
 package ru.astongroup.usermanagement.services;
 
 import java.util.Arrays;
-import java.util.List;
-import java.util.Optional;
+import java.util.Collection;
+import lombok.extern.slf4j.Slf4j;
+import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
 import org.springframework.stereotype.Service;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.repositories.UserRepository;
+import ru.astongroup.usermanagement.utils.mapper.UserMapper;
+
 import ru.astongroup.usermanagement.utils.security.PasswordHashing;
 import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
 import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
 import ru.astongroup.usermanagement.utils.exceptions.DatabaseTransactionException;
 
+@Slf4j
 @Service
-public class UserService {
+@Transactional
+@RequiredArgsConstructor
+public class UserService implements UserDetailsService {
 
     private final UserRepository userRepository;
+    //Для разрешения проблем с тестами поменял статические методы на нестатические
+    //и создал локальный объект
+    //имя переменной с больошой буквы, чтоб не было геморроя с переписыванием кода
+    private PasswordHashing PasswordHashing = new PasswordHashing();
 
-    public UserService(UserRepository userRepository) {
-        this.userRepository = userRepository;
-    }
+    public UserDto create(UserModel user) {
 
-    @Transactional
-    public Boolean create(UserModel user) {
-        try {
-            Optional<UserModel> userOptional = userRepository.findByEmail(user.getEmail());
+        if (userRepository.findByEmail(user.getEmail()).isPresent()) {
 
-            if (userOptional.isPresent()) {
-                throw new EmailAlreadyBusyException(StaticResources.EMAIL_IS_ALREADY_IN_USE_EXCEPTION_MESSAGE);
-            }
+            log.info("Пользователь email: {} уже существует", user.getEmail());
+            throw new EmailAlreadyBusyException(StaticResources.EMAIL_IS_ALREADY_IN_USE_EXCEPTION_MESSAGE);
+        }
+        String hashedPassword = PasswordHashing.createPasswordHash(user.getPassword());
+        user.setUsername(user.getEmail());
+        user.setPassword(hashedPassword);
+        var savedUser = userRepository.save(user);
 
-            String hashedPassword = PasswordHashing.createPasswordHash(user.getPassword());
-            user.setPassword(hashedPassword);
-
-            var savedUser = userRepository.save(user);
-
-            if (savedUser.equals(user)) return true;
-        } catch (Exception e) {
+        if (savedUser.equals(user))
+        {
+            log.info("Пользователь email:  {} успешно создан", user.getEmail());
+            return UserMapper.mapToDto(savedUser);
+        }
+        else {
+            log.info("Пользователь email: {} не создан. Ошибка при сохранении: \n %s", user.getEmail(), StaticResources.CANNOT_CREATE_NEW_USER_EXCEPTION_MESSAGE);
             throw new DatabaseTransactionException(StaticResources.CANNOT_CREATE_NEW_USER_EXCEPTION_MESSAGE);
         }
-        return false;
     }
 
-    public List<UserDto> getAll() {
+    public Collection<UserDto> getAll() {
 
         var users = userRepository.findAll();
-
-        return users.stream().map(UserModel::toDto).toList();
+        log.info("Все пользователи загружены");
+        return users.stream().map(UserMapper::mapToDto).toList();
     }
 
-    public UserDto getByEmail(String email) {
+    public UserModel getByEmail(String email) {
 
         var userOptional = userRepository.findByEmail(email);
 
         if(userOptional.isPresent()) {
-            return userOptional.get().toDto();
+            log.info("Пользователь email: {} найден", email);
+            return userOptional.get();
         }
         else {
             String message = StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE;
+            log.info("Пользователь email: {} не найден", email);
             throw new UserNotFoundException(message);
         }
     }
@@ -70,23 +83,27 @@ public class UserService {
         var userOptional = userRepository.findById(id);
 
         if(userOptional.isPresent()) {
-            return userOptional.get().toDto();
+            log.info("Пользователь id: {} найден", id);
+            return UserMapper.mapToDto(userOptional.get());
         }
         else {
-            String message = StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE;
-            throw new UserNotFoundException(message);
+            log.info("Пользователь id: {} не найден", id);
+            throw new UserNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
         }
     }
 
     @Transactional
     public Boolean deleteById(long id) {
+
         var userOptional = userRepository.findById(id);
 
         if (userOptional.isPresent()) {
+            log.info("Пользователь id: {} удалён", id);
             userRepository.delete(userOptional.get());
             return true;
         } else {
             String message = StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE;
+            log.info("Пользователь id: {} не найден", id);
             throw new UserNotFoundException(message);
         }
     }
@@ -97,13 +114,15 @@ public class UserService {
         var existingUserOptional = userRepository.findById(id);
 
         if (existingUserOptional.isPresent()) {
-
             var existingUser = existingUserOptional.get();
-
             userRepository.save(updatedUser(existingUser, user.getName(), user.getLastName(), user.getPhone(), user.getImage()));
+            log.info("Пользователь id: {} обновлен", id);
             return true;
         }
-        else throw new UserNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
+        else {
+            log.info("Пользователь id: {} не найден", id);
+            throw new UserNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
+        }
     }
 
     private UserModel updatedUser(UserModel existingUser, String name, String lastName, String phone, byte[] image) {
@@ -118,6 +137,21 @@ public class UserService {
         existingUser.setPhone(newPhone);
         existingUser.setImage(newImage);
 
+
+        log.info("Поля пользователя id: {}, name: {}, lastName: {}, phone: {}, image: {} обновлены. Ожидает сохранения", existingUser.getId(), newName, newLastName, newPhone, newImage);
         return existingUser;
+    }
+
+    @Override
+    public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
+
+        var userOptional = userRepository.findByUsername(username);
+        if(userOptional.isPresent()) {
+            log.info("Пользователь с email {} найден", username);
+            return userOptional.get();
+        }
+        log.info("Пользователь c email {} не найден", username);
+        throw new UsernameNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
+
     }
 }

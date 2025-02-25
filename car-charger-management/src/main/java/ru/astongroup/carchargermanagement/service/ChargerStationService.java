@@ -13,4 +13,6 @@ public interface ChargerStationService {
     void delete(Long id);
     void update(Long id, ChargerStationRequestDto chargerStationRequestDto);
 
+    ChargerStationResponseDto startCharging(Long stationId, Long carId);
+
 }

@@ -1,5 +1,5 @@
 package ru.astongroup.usermanagement.services;
-/*
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -8,7 +8,7 @@ import org.mockito.junit.jupiter.MockitoExtension;
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
-
+/*
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 import static org.mockito.ArgumentMatchers.any;

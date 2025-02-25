@@ -14,7 +14,7 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
-@Slf4jпше
+@Slf4j
 @Service
 public class ChargerStationServiceImpl implements ChargerStationService {
     private final ChargerStationRepository chargerStationRepository;

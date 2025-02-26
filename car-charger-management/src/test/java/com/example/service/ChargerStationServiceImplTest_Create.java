@@ -1,5 +1,6 @@
 package com.example.service;
 
+
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
@@ -11,11 +12,14 @@ import ru.astongroup.carchargermanagement.entity.ChargerStation;
 import ru.astongroup.carchargermanagement.repository.ChargerStationRepository;
 import ru.astongroup.carchargermanagement.service.ChargerStationServiceImpl;
 
+import java.util.ArrayList;
+import java.util.List;
+
 import static org.mockito.Mockito.*;
 import static org.junit.jupiter.api.Assertions.*;
 
 @ExtendWith(MockitoExtension.class)
-public class ChargerStationServiceImplTest {
+public class ChargerStationServiceImplTest_Create {
 
     @Mock
     private ChargerStationRepository chargerStationRepository;

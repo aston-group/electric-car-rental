@@ -1,4 +1,4 @@
-car-management.url: http://localhost:8080/cars
+car-management.url: http://api-gateway:8080/cars
 
 server:
   port: 8084

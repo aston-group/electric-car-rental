@@ -21,4 +21,6 @@ public interface NotificationService {
     void deleteById(Long notificationId);
 
     Collection<NotificationResponseDto> getByStatus(NotificationStatus status);
+
+    NotificationStatus sendEmail(String email, String message);
 }

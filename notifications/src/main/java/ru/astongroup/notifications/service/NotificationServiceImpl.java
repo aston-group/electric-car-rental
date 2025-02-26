@@ -96,6 +96,7 @@ public class NotificationServiceImpl implements NotificationService {
     }
 
     // Упаковываем письмо и отправляем голубя
+    @Override
     public NotificationStatus sendEmail(String email, String message) {
         EmailDetails emailDetails = EmailDetails.builder()
                 .recipient(email)

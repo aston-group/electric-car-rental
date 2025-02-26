@@ -50,4 +50,12 @@ public class ChargerController {
         chargerStationService.update(id, chargerStationRequestDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @PutMapping("/{id}/start")
+    public ResponseEntity<ChargerStationResponseDto> startCharging(
+            @PathVariable Long id,
+            @RequestParam Long carId) {
+        ChargerStationResponseDto responseDto = chargerStationService.startCharging(id, carId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }

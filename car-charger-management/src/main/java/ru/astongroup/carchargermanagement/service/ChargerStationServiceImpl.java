@@ -1,7 +1,10 @@
 package ru.astongroup.carchargermanagement.service;
 
 import jakarta.transaction.Transactional;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.astongroup.carchargermanagement.client.CarClient;
+import ru.astongroup.carchargermanagement.dto.CarResponseDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationRequestDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationResponseDto;
 import ru.astongroup.carchargermanagement.entity.ChargerStation;
@@ -13,12 +16,15 @@ import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
 
+@Slf4j
 @Service
 public class ChargerStationServiceImpl implements ChargerStationService {
     private final ChargerStationRepository chargerStationRepository;
+    private final CarClient carClient;
 
-    public ChargerStationServiceImpl(ChargerStationRepository chargingStationRepository) {
+    public ChargerStationServiceImpl(ChargerStationRepository chargingStationRepository, CarClient carClient) {
         this.chargerStationRepository = chargingStationRepository;
+        this.carClient = carClient;
     }
 
     @Override
@@ -65,5 +71,27 @@ public class ChargerStationServiceImpl implements ChargerStationService {
             chargerStation.setLongitude(chargerStationRequestDto.getLongitude());
             chargerStationRepository.save(chargerStation);
         }
+    }
+
+    @Override
+    @Transactional
+    public ChargerStationResponseDto startCharging(Long stationId, Long carId) {
+        ChargerStation station = chargerStationRepository.findById(stationId)
+                .orElseThrow(() -> new DataNotFoundException("Charger station not found" + stationId));
+
+        if(!station.getIsAvailableStation()) {
+            throw new IllegalStateException("Charger station is not available");
+        }
+
+        CarResponseDto carResponseDto = carClient.getCarById(carId)
+                .orElseThrow(() -> new DataNotFoundException("Car  not found" + carId));
+
+        log.info("Начинаем зарядку машины: {}", carResponseDto);
+
+        station.setIsAvailableStation(false);
+        chargerStationRepository.save(station);
+
+        log.info("Станция {} занята электромобилем {}", stationId, carId);
+        return ChargerStationMapper.toChargerStationResponseDto(station);
     }
 }

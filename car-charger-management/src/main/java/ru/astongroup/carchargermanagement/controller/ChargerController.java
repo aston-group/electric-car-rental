@@ -53,9 +53,9 @@ public class ChargerController {
 
     @PostMapping("/{id}/start")
     public ResponseEntity<ChargerStationResponseDto> startCharging(
-            @PathVariable Long stationId,
+            @PathVariable Long id,
             @RequestParam Long carId) {
-        ChargerStationResponseDto responseDto = chargerStationService.startCharging(stationId, carId);
+        ChargerStationResponseDto responseDto = chargerStationService.startCharging(id, carId);
         return new ResponseEntity<>(responseDto, HttpStatus.OK);
     }
 }

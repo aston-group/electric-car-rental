@@ -3,6 +3,8 @@ package ru.astongroup.carchargermanagement.service;
 import jakarta.transaction.Transactional;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
+import ru.astongroup.carchargermanagement.client.CarClient;
+import ru.astongroup.carchargermanagement.dto.CarResponseDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationRequestDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationResponseDto;
 import ru.astongroup.carchargermanagement.entity.ChargerStation;
@@ -18,9 +20,11 @@ import java.util.stream.Collectors;
 @Service
 public class ChargerStationServiceImpl implements ChargerStationService {
     private final ChargerStationRepository chargerStationRepository;
+    private final CarClient carClient;
 
-    public ChargerStationServiceImpl(ChargerStationRepository chargingStationRepository) {
+    public ChargerStationServiceImpl(ChargerStationRepository chargingStationRepository, CarClient carClient) {
         this.chargerStationRepository = chargingStationRepository;
+        this.carClient = carClient;
     }
 
     @Override
@@ -78,6 +82,11 @@ public class ChargerStationServiceImpl implements ChargerStationService {
         if(!station.getIsAvailableStation()) {
             throw new IllegalStateException("Charger station is not available");
         }
+
+        CarResponseDto carResponseDto = carClient.getCarById(carId)
+                .orElseThrow(() -> new DataNotFoundException("Car  not found" + carId));
+
+        log.info("Начинаем зарядку машины: {}", carResponseDto);
 
         station.setIsAvailableStation(false);
         chargerStationRepository.save(station);

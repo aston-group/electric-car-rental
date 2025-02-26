@@ -4,10 +4,7 @@ import org.springframework.data.jpa.repository.Modifying;
 import org.springframework.data.jpa.repository.Query;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
-
 import ru.astongroup.usermanagement.models.TokenArchive;
-
-import java.util.Optional;
 
 @Repository
 public interface TokenRepository extends CrudRepository<TokenArchive, Long> {

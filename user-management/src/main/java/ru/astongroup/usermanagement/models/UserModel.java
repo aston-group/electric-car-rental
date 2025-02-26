@@ -1,18 +1,25 @@
 package ru.astongroup.usermanagement.models;
 
-import java.util.Date;
-
-import java.util.List;
-import java.util.Collection;
-
-import jakarta.persistence.*;
-import lombok.*;
-
+import jakarta.persistence.Column;
+import jakarta.persistence.Entity;
+import jakarta.persistence.EnumType;
+import jakarta.persistence.Enumerated;
+import jakarta.persistence.GeneratedValue;
+import jakarta.persistence.GenerationType;
+import jakarta.persistence.Id;
+import jakarta.persistence.Table;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.RequiredArgsConstructor;
+import lombok.Setter;
 import org.springframework.security.core.GrantedAuthority;
 import org.springframework.security.core.userdetails.UserDetails;
-
-import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
+
+import java.util.Collection;
+import java.util.Date;
+import java.util.List;
 
 @Getter
 @Setter

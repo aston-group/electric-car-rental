@@ -1,25 +1,22 @@
 package ru.astongroup.usermanagement.utils.exceptions.global;
 
-import java.util.Date;
-
+import jakarta.servlet.http.HttpServletRequest;
 import lombok.extern.slf4j.Slf4j;
-
 import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
-import jakarta.servlet.http.HttpServletRequest;
-
 import org.springframework.http.HttpStatus;
-
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.ResponseBody;
-import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.ControllerAdvice;
 import org.springframework.web.bind.annotation.ExceptionHandler;
+import org.springframework.web.bind.annotation.ResponseBody;
+import org.springframework.web.bind.annotation.ResponseStatus;
 import ru.astongroup.usermanagement.models.Dtos.ErrorDto;
 import ru.astongroup.usermanagement.utils.StaticResources;
-import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
-import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
 import ru.astongroup.usermanagement.utils.exceptions.DatabaseTransactionException;
+import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
+import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
+
+import java.util.Date;
 
 @Slf4j
 @ControllerAdvice
@@ -38,19 +35,15 @@ public class GlobalExceptionHandler {
         error.setPath(request.getServletPath());
         error.setMessage(exception.getMessage());
 
-        if (exception.getMessage().contains("JDBC exception executing SQL"))
-        {
+        if (exception.getMessage().contains("JDBC exception executing SQL")) {
             error.setMessage(StaticResources.DATABASE_ACCESS_EXCEPTION_MESSAGE);
         }
 
-        if(exception instanceof EmailAlreadyBusyException ||
+        if (exception instanceof EmailAlreadyBusyException ||
                 exception instanceof DatabaseTransactionException ||
-                exception instanceof UserNotFoundException)
-        {
+                exception instanceof UserNotFoundException) {
             error.setStatusCode(HttpStatus.CONFLICT.value());
-        }
-
-        else {
+        } else {
             error.setStatusCode(HttpStatus.INTERNAL_SERVER_ERROR.value());
         }
         log.error(error.toString());
@@ -58,11 +51,13 @@ public class GlobalExceptionHandler {
 
         return error;
     }
+
     @ExceptionHandler(EmailAlreadyBusyException.class)
     public ResponseEntity<String> handleEmailAlreadyBusyException(EmailAlreadyBusyException e) {
         log.error(e.getMessage());
         return ResponseEntity.status(HttpStatus.CONFLICT).body(e.getMessage());
     }
+
     @ExceptionHandler(DatabaseTransactionException.class)
     public ResponseEntity<String> handleDatabaseTransactionException(DatabaseTransactionException e) {
         log.error(e.getMessage());

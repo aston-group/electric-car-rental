@@ -2,8 +2,13 @@ package ru.astongroup.carbooking.dto;
 
 import jakarta.persistence.EnumType;
 import jakarta.persistence.Enumerated;
-import lombok.*;
+import lombok.AllArgsConstructor;
+import lombok.Builder;
+import lombok.Getter;
+import lombok.NoArgsConstructor;
+import lombok.Setter;
 import ru.astongroup.carbooking.entity.Status;
+
 import java.time.LocalDateTime;
 
 @Builder

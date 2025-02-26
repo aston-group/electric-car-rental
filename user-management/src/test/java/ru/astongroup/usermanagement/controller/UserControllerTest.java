@@ -1,22 +1,27 @@
 package ru.astongroup.usermanagement.controller;
 
-import java.util.List;
-import java.util.Collection;
-
-import org.mockito.Mock;
-import org.mockito.InjectMocks;
 import org.junit.jupiter.api.Test;
-import static org.mockito.Mockito.*;
-import static org.mockito.Mockito.times;
-import static org.junit.jupiter.api.Assertions.*;
-
+import org.mockito.InjectMocks;
+import org.mockito.Mock;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
-import ru.astongroup.usermanagement.testUtils.TestUtils;
 import ru.astongroup.usermanagement.services.UserService;
-import ru.astongroup.usermanagement.utils.mapper.UserMapper;
+import ru.astongroup.usermanagement.testUtils.TestUtils;
 import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
+import ru.astongroup.usermanagement.utils.mapper.UserMapper;
+
+import java.util.Collection;
+import java.util.List;
+
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 class UserControllerTest extends TestUtils {
 

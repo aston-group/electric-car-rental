@@ -1,0 +1,322 @@
+{
+	"info": {
+		"_postman_id": "aa08614f-9b89-4f91-8969-a343ebc4c91b",
+		"name": "e-car-rental",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "38661674"
+	},
+	"item": [
+		{
+			"name": "create new user",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"name\":\"gigaden\",\n    \"email\":\"gigaden@ya.ru\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all users",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":1,\n    \"carId\":2,\n    \"bookingStart\":\"2025-02-17 19:23:02\",\n    \"bookingEnd\":\"2025-02-17 19:23:02\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/users",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"users"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all notifications",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notifications",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "create new booking",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n    \"userId\":2,\n    \"carId\":2,\n    \"startTime\":\"2025-03-01T17:00:00\",\n    \"endTime\":\"2025-03-03T17:00:00\"\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8080/bookings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "тест создания уведомления",
+			"event": [
+				{
+					"listen": "prerequest",
+					"script": {
+						"exec": [
+							"const createUser = async () => {",
+							"    const postRequest = {",
+							"        url: 'http://localhost:8080/users/create',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({                ",
+							"                name: \"gigaden6\",",
+							"                email: \"gigaden@yandex6.ru\"                ",
+							"            })",
+							"        }",
+							"    };",
+							"",
+							"    try {",
+							"        const response = await pm.sendRequest(postRequest);",
+							"        const responseData = response.json();",
+							"",
+							"        // Проверяем успешность создания",
+							"        if (response.code === 200) {",
+							"            // Сохраняем userId в переменную окружения",
+							"            pm.environment.set('userId', responseData.id);",
+							"            console.log('User created with ID:', pm.environment.get('userId')); // Проверка значения",
+							"        } else {",
+							"            throw new Error('Failed to create user');",
+							"        }",
+							"    } catch (err) {",
+							"        console.error('Error in POST request:', err);",
+							"        throw err;",
+							"    }",
+							"};",
+							"",
+							"const createNotification = async () => {",
+							"    // Получаем userId из переменных окружения",
+							"    const userId = pm.environment.get('userId');",
+							"",
+							"    const postRequest = {",
+							"        url: 'http://localhost:8080/notifications',",
+							"        method: 'POST',",
+							"        header: {",
+							"            'Content-Type': 'application/json'",
+							"        },",
+							"        body: {",
+							"            mode: 'raw',",
+							"            raw: JSON.stringify({",
+							"                bookingId: \"2\",",
+							"                userId: userId, // Используем значение из переменной окружения",
+							"                notificationType: \"NEW_BOOKING\"",
+							"            })",
+							"        }",
+							"    };",
+							"",
+							"    try {",
+							"        const response = await pm.sendRequest(postRequest);",
+							"        const responseData = response.json();",
+							"",
+							"        if (response.code === 201) {",
+							"            pm.environment.set('notificationId', responseData.id);",
+							"            console.log('Notification created with ID:', responseData.id);",
+							"        } else {",
+							"            throw new Error('Failed to create notification');",
+							"        }",
+							"    } catch (err) {",
+							"        console.error('Error in POST request:', err);",
+							"        throw err;",
+							"    }",
+							"};",
+							"",
+							"// Вызываем функции последовательно",
+							"await createUser();",
+							"await createNotification();"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				},
+				{
+					"listen": "test",
+					"script": {
+						"exec": [
+							"// Проверяем, что статус ответа 200 (OK)",
+							"pm.test(\"Status code is 202\", function () {",
+							"    pm.response.to.have.status(202);",
+							"});",
+							"",
+							"// Парсим ответ и проверяем, что данные сущности соответствуют ожидаемым",
+							"const response = pm.response.json();",
+							"pm.test(\"Entity ID matches\", function () {",
+							"    pm.expect(response.id).to.eql(pm.environment.get(\"notificationId\"));",
+							"});"
+						],
+						"type": "text/javascript",
+						"packages": {}
+					}
+				}
+			],
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/notifications/{{notificationId}}",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"notifications",
+						"{{notificationId}}"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all cars",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/cars/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"cars",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all chargers",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/chargers",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"chargers"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "get all bookings",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "http://localhost:8080/bookings",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8080",
+					"path": [
+						"bookings"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}

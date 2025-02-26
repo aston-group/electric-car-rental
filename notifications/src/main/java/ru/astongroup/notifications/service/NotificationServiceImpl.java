@@ -12,7 +12,6 @@ import ru.astongroup.notifications.dto.UserRequestDto;
 import ru.astongroup.notifications.entity.EmailDetails;
 import ru.astongroup.notifications.entity.Notification;
 import ru.astongroup.notifications.entity.NotificationStatus;
-import ru.astongroup.notifications.entity.NotificationType;
 import ru.astongroup.notifications.exception.NotificationNotFoundException;
 import ru.astongroup.notifications.exception.UserNotFoundException;
 import ru.astongroup.notifications.mapper.NotificationMapper;
@@ -20,7 +19,6 @@ import ru.astongroup.notifications.repository.NotificationRepository;
 import ru.astongroup.notifications.util.EmailMessages;
 
 import java.util.Collection;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor

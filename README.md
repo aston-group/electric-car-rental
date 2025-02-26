@@ -1,76 +1,115 @@
-## PRE-README
+# 🚗 Electric Car Rental
 
-### Запустить по-быстрому и проверить, что всё работает<br>
-(чтобы заработало нужно во всех application.yaml у микросервисов defaultZone: http://localhost:8761/eureka/ 
-заменить на defaultZone: http://discovery-server:8761/eureka/)
+![Spring Boot](https://img.shields.io/badge/Spring%20Boot-2.7.5-green) ![Java](https://img.shields.io/badge/Java-21-blue) ![Microservices](https://img.shields.io/badge/Architecture-Microservices-orange)
+
+Electric Car Rental – это REST API backend-приложение для аренды электромобилей, построенное на микросервисной
+архитектуре с использованием Spring Boot.
+
+## 🏗 Архитектура
+[Графическая схема проекта](https://excalidraw.com/#json=QGoNZYwAvznGbzwGVHCMm,ZRk220TFOQrcR5D_XUW9dQ)
+
+Проект построен на микросервисной архитектуре и включает следующие сервисы:
+
+1. **User Management** – управление пользователями (регистрация, удаление и т. д.).
+2. **Car Booking** – бронирование автомобилей (проверка доступности, расчёт стоимости).
+3. **Car Management** – управление автопарком (добавление, редактирование, удаление автомобилей).
+4. **Car Charger Management** – управление зарядными станциями.
+5. **Notifications** – отправка уведомлений пользователям.
+
+Все микросервисы регистрируются в **Eureka Discovery Service** и взаимодействуют через **API Gateway**.
+
+## 📌 Стек технологий
+
+- **Java 21**
+- **Spring Boot** (Web, Cloud, Security, Data JPA)
+- **Spring Cloud Eureka** (Service Discovery)
+- **Spring Cloud Gateway** (API Gateway)
+- **PostgreSQL** (БД для каждого микросервиса)
+- **Docker, Docker Compose** (контейнеризация)
+- **Swagger/OpenAPI** (документация API)
+
+## 🚀 Запуск проекта
+
+### 0. Перед запуском
+
+Необходимо внести ключ и почту для отправки уведомлений, для этого:
+
+- перейти в сервисе notifications/src/mian/resources
+- https://myaccount.google.com/apppasswords - получить пароль.
+- отредактировать файл api-keys.yaml.sample, указав свой gmail и пароль для приложений
+- переименовать файл в api-keys.yaml
+
+### 1. Клонирование репозитория
+
 ```bash
-    mvn clean install
-    docker compose up
+git clone https://github.com/aston-group/electric-car-rental.git
+cd electric-car-rental
 ```
-___
-### Запустить отдельно конкретный микросервис:
-Все сервисы работают со своей БД, поэтому перед запуском сервиса запускаем контейнер с БД,
-а так же сервис api-gateway и discovery-server:
-* поднимаем БД: docker compose up <имя сервиса>, например
+
+п
+
+### 2. Запуск через Docker Compose
+
 ```bash
-    docker compose up api-gateway, discovery-server, users-db
+mvn clean install
+docker-compose up -d
 ```
-* заходим в папку микросервиса и стартуем его. Для фанатов консоли:
+
+### 3. Запуск вручную (локально)
+
+#### 🔹 Запуск сервисов
+
+Запускаем **Eureka Server**:
+
 ```bash
-    mvn spring-boot:run
+cd discovery-server
+mvn spring-boot:run
 ```
 
-### api-gateway
-Это шлюз нашего приложения. Крутится по адресу http://localhost:8080
-и перенаправляет запросы на наши микросервисы - это основная точка входа в наше приложение.
+Запускаем **API Gateway**:
 
-### discovery-server
-Регистрирует наши микросервисы для gateway. Крутится по адресу http://localhost:8761
-___
+```bash
+cd api-gateway
+mvn spring-boot:run
+```
 
-## Основные микросервисы
+Запускаем остальные микросервисы (аналогично):
 
-### car-management:
-http://localhost:8080/cars<br>
-http://localhost:8083<br>
-Сервис для управления электромобилями. Отвечает за:
-* добавление авто
-* удаление авто
-* редактирование
-* остальное по вкусу
+```bash
+cd user-management
+mvn spring-boot:run
+```
 
-### car-booking:
-http://localhost:8080/bookings<br>
-http://localhost:8085<br>
-Сервис для бронирования электромобилями. Отвечает за:
-* создание брони
-* редактирование брони
-* отмена брони
-* расчёт стоимости
+### 4. Доступные эндпоинты
 
-### user-management:
-http://localhost:8080/users<br>
-http://localhost:8081<br>
-Сервис для управления пользователями. Отвечает за:
-* создание пользователя
-* редактирование пользователя
-* удаление пользователя
-* помимо обычных пользователей должны быть и админы со своими правами
+#### 📌 API Gateway (localhost:8080)
 
-### notifications:
-http://localhost:8080/notifications<br>
-http://localhost:8082<br>
-Сервис для создания и отправки уведомлений. Отвечает за:
-* создание уведомлений
-* подписка на уведомления
-* редактирование и отмена подписки
-* рассылка уведомлений
+| URL                                                      | Описание                       |
+|----------------------------------------------------------|--------------------------------|
+| [Описание user-management](user-management/README.md)    | Управление пользователями      |
+| [Описание car-management](car-management/README.md)      | Управление электромобилями     |
+| [Описание car-booking](car-booking/README.md)            | Создание бронирования          |
+| [Описание car-charger](car-charger-management/README.md) | Управление зарядными станциями |
+| [Описание notifications](notifications/README.md)        | Получение уведомлений          |
 
-### car-charger-management:
-http://localhost:8080/chargers<br>
-http://localhost:8084<br>
-Сервис для управления зарядными станциями. Отвечает за:
-* добавление зарядной станции
-* проверка её доступности(не заряжается ли кто-то на ней сейчас)
-* получение информации о ней
-* маршрут/расстояние до неё
+## 📜 Структура проекта
+
+```
+📦 electric-car-rental
+ ┣ 📂 api-gateway
+ ┣ 📂 discovery-server
+ ┣ 📂 user-management
+ ┣ 📂 car-booking
+ ┣ 📂 car-management
+ ┣ 📂 car-charger-management
+ ┣ 📂 notifications
+ ┣ 📜 docker-compose.yml
+ ┣ 📜 README.md
+```
+
+## 🛠 Разработка и улучшение
+
+1. Добавление сервиса для оплаты.
+2. Расширение сервиса уведомлений на другие каналы.
+3. Фронтэнд.
+

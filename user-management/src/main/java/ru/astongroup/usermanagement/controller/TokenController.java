@@ -1,7 +1,9 @@
 package ru.astongroup.usermanagement.controller;
 
-import org.springframework.web.bind.annotation.*;
-
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
 import ru.astongroup.usermanagement.components.JwtTokenProvider;
 import ru.astongroup.usermanagement.models.TokenArchive;
 import ru.astongroup.usermanagement.services.TokenService;
@@ -13,6 +15,7 @@ public class TokenController {
 
     private final TokenService tokenService;
     private final JwtTokenProvider tokenProvider;
+
     public TokenController(TokenService tokenService, JwtTokenProvider TokenProvider) {
         this.tokenService = tokenService;
         this.tokenProvider = TokenProvider;

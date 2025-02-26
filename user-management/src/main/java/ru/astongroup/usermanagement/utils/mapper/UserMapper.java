@@ -1,15 +1,16 @@
 package ru.astongroup.usermanagement.utils.mapper;
 
 import org.springframework.stereotype.Component;
-import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
+import ru.astongroup.usermanagement.models.UserModel;
 
 import java.util.Date;
 
 @Component
 public class UserMapper {
 
-    private UserMapper() {}
+    private UserMapper() {
+    }
 
     public static UserDto mapToDto(UserModel model) {
         return UserDto.builder()

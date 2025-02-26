@@ -2,7 +2,6 @@ package ru.astongroup.notifications.repository;
 
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.Query;
-import ru.astongroup.notifications.dto.NotificationResponseDto;
 import ru.astongroup.notifications.entity.Notification;
 import ru.astongroup.notifications.entity.NotificationStatus;
 

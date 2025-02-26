@@ -1,12 +1,9 @@
 package ru.astongroup.carbooking.client;
 
-import org.springframework.http.ResponseEntity;
-import ru.astongroup.carbooking.dto.CarRequestDto;
-
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.http.HttpStatusCode;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestClient;
 import ru.astongroup.carbooking.dto.CarResponseDTO;
@@ -30,7 +27,7 @@ public class CarClient {
 
     public Optional<CarResponseDTO> getCarById(Long carId) {
         ResponseEntity<CarResponseDTO> response = restClient.get()
-                .uri("/cars/get/{id}", carId)
+                .uri("/get/{id}", carId)
                 .retrieve()
                 .toEntity(CarResponseDTO.class);
 

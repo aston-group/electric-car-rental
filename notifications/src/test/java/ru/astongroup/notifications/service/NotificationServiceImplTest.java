@@ -20,7 +20,8 @@ import ru.astongroup.notifications.repository.NotificationRepository;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertThrows;
 
 @ExtendWith(MockitoExtension.class)
 class NotificationServiceImplTest {
@@ -60,7 +61,7 @@ class NotificationServiceImplTest {
 
         Mockito
                 .when(userClient.getUserById(userId))
-                        .thenReturn(Optional.ofNullable(userRequestDto));
+                .thenReturn(Optional.ofNullable(userRequestDto));
         Mockito
                 .when(notificationRepository.save(Mockito.any(Notification.class)))
                 .thenReturn(notification);

@@ -1,6 +1,5 @@
 package ru.astongroup.usermanagement.configurations;
 
-import java.io.IOException;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -11,15 +10,16 @@ import org.springframework.security.authentication.UsernamePasswordAuthenticatio
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
-
+import ru.astongroup.usermanagement.components.CustomAuthenticationManager;
+import ru.astongroup.usermanagement.components.JwtTokenProvider;
 import ru.astongroup.usermanagement.models.UserModel;
+import ru.astongroup.usermanagement.repositories.TokenRepository;
+import ru.astongroup.usermanagement.repositories.UserRepository;
 import ru.astongroup.usermanagement.services.TokenService;
 import ru.astongroup.usermanagement.services.UserService;
 import ru.astongroup.usermanagement.utils.StaticResources;
-import ru.astongroup.usermanagement.components.JwtTokenProvider;
-import ru.astongroup.usermanagement.repositories.UserRepository;
-import ru.astongroup.usermanagement.repositories.TokenRepository;
-import ru.astongroup.usermanagement.components.CustomAuthenticationManager;
+
+import java.io.IOException;
 
 @Slf4j
 @RequiredArgsConstructor
@@ -36,7 +36,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
                                 UserRepository userRepository,
                                 TokenRepository tokenRepository,
                                 JwtTokenProvider jwtTokenProvider,
-                                CustomAuthenticationManager authenticationManager ) {
+                                CustomAuthenticationManager authenticationManager) {
 
         log.info("-------------------------\nЗаходим в конструктор класса AuthenticationFilter\n-------------------------");
         this.userService = userService;
@@ -59,7 +59,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
         String authorizationHeader = req.getHeader("Authorization");
 
         log.info("-------------------------\nAuthenticationFilter.attemptAuthentication\nВход в метод attemptAuthentication\n-------------------------");
-        if(authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
+        if (authorizationHeader != null && authorizationHeader.startsWith("Basic ")) {
             log.info("-------------------------\nAuthenticationFilter.attemptAuthentication\nЗаголовок авторизации начинается с Basic\n-------------------------");
             var usernamePassword = getUsernamePasswordFromRequest(req);
             String login = usernamePassword[0];
@@ -71,14 +71,13 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
             log.info("-------------------------\nAuthenticationFilter.attemptAuthentication\nПользователь " + login + " попытка аутенфикации\n-------------------------");
             return authenticationManager.authenticate(authenticationToken);
-        }
-        else {
+        } else {
             log.info("-------------------------\nAuthenticationFilter.attemptAuthentication\nНе удалось получить Basic Authorization header\n-------------------------");
             throw new IllegalArgumentException("Basic Authorization header is missing");
         }
     }
 
-    public String[] getUsernamePasswordFromRequest(HttpServletRequest request){
+    public String[] getUsernamePasswordFromRequest(HttpServletRequest request) {
 
         try {
             String base64Credentials = request.getHeader("Authorization").substring("Basic ".length());
@@ -88,8 +87,7 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
             log.info("-------------------------\nAuthenticationFilter.getUsernamePasswordFromRequest\nПользователь " + result[0] + " получаем пароль и логин\n-------------------------");
             return credentials.split(":", 2);
-        }
-        catch (IllegalArgumentException e) {
+        } catch (IllegalArgumentException e) {
             log.info("-------------------------\nAuthenticationFilter.getUsernamePasswordFromRequest\nНе удалось получить Basic Authorization header\n-------------------------");
             //throw new IllegalArgumentException(StaticResources.INVALID_USERNAME_OR_PASSWORD_EXCEPTION_MESSAGE);
             return null;
@@ -103,9 +101,8 @@ public class AuthenticationFilter extends UsernamePasswordAuthenticationFilter {
 
         if (user != null) {
             log.info("-------------------------\nAuthenticationFilter.tryToGetUser\nПользователь " + userName + " найден\n-------------------------");
-            return (UserModel)user;
-        }
-        else {
+            return (UserModel) user;
+        } else {
             log.info("-------------------------\nAuthenticationFilter.tryToGetUser\nПользователь " + userName + " не найден\n-------------------------");
             throw new IllegalArgumentException(StaticResources.INVALID_USERNAME_OR_PASSWORD_EXCEPTION_MESSAGE);
         }

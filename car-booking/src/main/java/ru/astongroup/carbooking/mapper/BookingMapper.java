@@ -18,6 +18,7 @@ public class BookingMapper {
     }
 
     public BookingResponseDTO toBookingResponseDto(Booking booking) {
+
         return BookingResponseDTO.builder()
                 .id(booking.getId())
                 .userId(booking.getUserId())

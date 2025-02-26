@@ -142,7 +142,7 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8081/users/1",
+					"raw": "http://localhost:8081/users/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
@@ -150,7 +150,7 @@
 					"port": "8081",
 					"path": [
 						"users",
-						"1"
+						"2"
 					]
 				}
 			},
@@ -214,16 +214,16 @@
 					}
 				},
 				"url": {
-					"raw": "http://localhost:8080/users/delete/93",
+					"raw": "http://localhost:8081/users/delete/2",
 					"protocol": "http",
 					"host": [
 						"localhost"
 					],
-					"port": "8080",
+					"port": "8081",
 					"path": [
 						"users",
 						"delete",
-						"93"
+						"2"
 					]
 				}
 			},

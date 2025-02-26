@@ -19,6 +19,7 @@ import java.time.Duration;
 import java.time.LocalDateTime;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Optional;
 
 @Slf4j
 @Service
@@ -41,7 +42,15 @@ public class BookingServiceImpl implements BookingService {
         userClient.getUserById(bookingReqCreateDto.getUserId())
                 .orElseThrow(() -> {
                     log.warn("Пользователь с id = {} не найден", bookingReqCreateDto.getUserId());
-                    return new RuntimeException(String.format("Пользователь с id = %d не найден", bookingReqCreateDto.getUserId()));
+                    return new RuntimeException(String.format("Пользователь с id = %d не найден",
+                            bookingReqCreateDto.getUserId()));
+                });
+
+        carClient.getCarById(bookingReqCreateDto.getCarId())
+                .orElseThrow(() -> {
+                    log.warn("Машина с id = {} не найдена", bookingReqCreateDto.getCarId());
+                    return new RuntimeException(String.format("Машина с id = %d не найдена",
+                            bookingReqCreateDto.getCarId()));
                 });
 
         Booking bookingEntity = bookingMapper.toBookingEntity(bookingReqCreateDto);
@@ -160,7 +169,13 @@ public class BookingServiceImpl implements BookingService {
     private double calculatePrice(Long carId, LocalDateTime start, LocalDateTime end) {
         long minutes = Duration.between(start, end).toMinutes();
 
-        CarResponseDTO carResponseDTO = carClient.getCarById(carId).get();
+        Optional<CarResponseDTO> optionalCar = carClient.getCarById(carId);
+
+        if (optionalCar.isEmpty()) {
+            throw new RuntimeException("Машина с id " + carId + " не найдена");
+        }
+
+        CarResponseDTO carResponseDTO = optionalCar.get();
         BigDecimal costPerMinute = carResponseDTO.getCostPerMinute();
 
         return costPerMinute.multiply(BigDecimal.valueOf(minutes)).doubleValue();

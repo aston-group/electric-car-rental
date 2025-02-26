@@ -51,7 +51,7 @@ public class ChargerController {
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
 
-    @PostMapping("/{id}/start-charging")
+    @PostMapping("/{id}/start")
     public ResponseEntity<ChargerStationResponseDto> startCharging(
             @PathVariable Long stationId,
             @RequestParam Long carId) {

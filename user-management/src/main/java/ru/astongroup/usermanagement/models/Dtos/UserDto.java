@@ -3,11 +3,10 @@ package ru.astongroup.usermanagement.models.Dtos;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
-import java.util.Date;
-
 import lombok.NoArgsConstructor;
-import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
+
+import java.util.Date;
 
 @Data
 @Builder
@@ -21,7 +20,7 @@ public class UserDto {
     private String email;
     private UserStatus userStatus;
     private String phone;
-    private  byte[] image;
+    private byte[] image;
     private Date created;
 
     @Override

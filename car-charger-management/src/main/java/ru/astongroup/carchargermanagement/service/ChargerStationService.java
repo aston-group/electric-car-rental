@@ -8,9 +8,13 @@ import java.util.List;
 
 public interface ChargerStationService {
     ChargerStationResponseDto create(ChargerStationRequestDto chargingStationRequestDto);
+
     List<ChargerStationResponseDto> findAll();
+
     ChargerStationResponseDto findById(Long id);
+
     void delete(Long id);
+
     void update(Long id, ChargerStationRequestDto chargerStationRequestDto);
 
 }

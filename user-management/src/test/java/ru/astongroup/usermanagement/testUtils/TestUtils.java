@@ -1,10 +1,10 @@
 package ru.astongroup.usermanagement.testUtils;
 
+import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.Mock;
 import org.mockito.junit.jupiter.MockitoExtension;
-import org.junit.jupiter.api.extension.ExtendWith;
-import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
+import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.enums.UserStatus;
 import ru.astongroup.usermanagement.repositories.UserRepository;
 import ru.astongroup.usermanagement.utils.security.PasswordHashing;
@@ -16,12 +16,15 @@ import java.util.List;
 public abstract class TestUtils {
     @Mock
     protected UserModel actualUser;
-    @Mock protected UserDto expectedUserDto;
-    @Mock protected UserRepository userRepository;
-    @Mock protected PasswordHashing passwordHashing;
+    @Mock
+    protected UserDto expectedUserDto;
+    @Mock
+    protected UserRepository userRepository;
+    @Mock
+    protected PasswordHashing passwordHashing;
 
 
-    protected UserModel testUser  = new UserModel().builder()
+    protected UserModel testUser = new UserModel().builder()
             .email("test@test.ru")
             .password("test")
             .name("test")
@@ -31,9 +34,9 @@ public abstract class TestUtils {
 
     ///////////////////////////////////////////////////////////////////////
     //DTOS
-    ///////////////////////////////////////////////////////////////////////
+    /// ////////////////////////////////////////////////////////////////////
 
-    protected  UserDto testUserDto0 = new UserDto().builder()
+    protected UserDto testUserDto0 = new UserDto().builder()
             .id(0)
             .name("test")
             .email("test@test.ru")
@@ -43,14 +46,14 @@ public abstract class TestUtils {
             .image(null)
             .userStatus(UserStatus.USER)
             .build();
-    protected  UserDto testUserDto = new UserDto().builder()
+    protected UserDto testUserDto = new UserDto().builder()
             .id(1)
             .email("test@test.ru")
             .userStatus(UserStatus.USER)
             .name("test")
             .lastName("test")
             .build();
-    protected  UserDto testUserDto1 = new UserDto().builder()
+    protected UserDto testUserDto1 = new UserDto().builder()
             .id(2)
             .email("test1@test.ru")
             .userStatus(UserStatus.USER)
@@ -67,8 +70,8 @@ public abstract class TestUtils {
 
     ///////////////////////////////////////////////////////////////////////
     //MODELS
-    ///////////////////////////////////////////////////////////////////////
-    protected  UserModel testUser0 = new UserModel().builder()
+    /// ////////////////////////////////////////////////////////////////////
+    protected UserModel testUser0 = new UserModel().builder()
             .id(0)
             .name("test")
             .email("test@test.ru")
@@ -83,7 +86,7 @@ public abstract class TestUtils {
             .username(testUser.getEmail())
             .build();
 
-    protected  UserModel testUser1 = new UserModel().builder()
+    protected UserModel testUser1 = new UserModel().builder()
             .id(1)
             .name("test1")
             .email("test1@test.ru")
@@ -98,7 +101,7 @@ public abstract class TestUtils {
             .username(testUser.getEmail())
             .build();
 
-    protected  UserModel testUpdatedUser0 = new UserModel().builder()
+    protected UserModel testUpdatedUser0 = new UserModel().builder()
             .id(0)
             .name("testVasya")
             .email("test@test.ru")
@@ -116,6 +119,6 @@ public abstract class TestUtils {
 
     protected List<UserModel> getTestUsersCollention() {
 
-        return  List.of(testUser0, testUser1/*, testUserDto2*/);//, testUserDto2);
+        return List.of(testUser0, testUser1/*, testUserDto2*/);//, testUserDto2);
     }
 }

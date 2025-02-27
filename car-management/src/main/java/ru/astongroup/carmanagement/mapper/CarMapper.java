@@ -1,6 +1,5 @@
 package ru.astongroup.carmanagement.mapper;
 
-import org.springframework.stereotype.Component;
 import ru.astongroup.carmanagement.dto.CarCreateDTO;
 import ru.astongroup.carmanagement.dto.CarResponseDTO;
 import ru.astongroup.carmanagement.dto.CarUpdateDTO;

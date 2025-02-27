@@ -2,26 +2,24 @@ package ru.astongroup.usermanagement.configurations;
 
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
-import org.springframework.http.HttpMethod;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
-import org.springframework.security.crypto.password.PasswordEncoder;
-import org.springframework.security.web.SecurityFilterChain;
-import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.http.HttpMethod;
+import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configuration.EnableWebSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
-import org.springframework.security.config.annotation.authentication.builders.AuthenticationManagerBuilder;
-
-import ru.astongroup.usermanagement.services.UserService;
-
-import ru.astongroup.usermanagement.components.JwtTokenProvider;
-import ru.astongroup.usermanagement.repositories.UserRepository;
-import ru.astongroup.usermanagement.repositories.TokenRepository;
-
-import ru.astongroup.usermanagement.utils.security.PasswordHashing;
+import org.springframework.security.config.http.SessionCreationPolicy;
+import org.springframework.security.crypto.password.PasswordEncoder;
+import org.springframework.security.web.SecurityFilterChain;
 import ru.astongroup.usermanagement.components.CustomAuthenticationManager;
+import ru.astongroup.usermanagement.components.JwtTokenProvider;
+import ru.astongroup.usermanagement.repositories.TokenRepository;
+import ru.astongroup.usermanagement.repositories.UserRepository;
+import ru.astongroup.usermanagement.services.UserService;
+import ru.astongroup.usermanagement.utils.security.PasswordHashing;
+
 import static org.springframework.security.config.Customizer.withDefaults;
 
 @Slf4j
@@ -62,10 +60,10 @@ public class SecurityConfig {
 
                         // HTTPMethod можно не указывать - это необязательный параметр
                         //Так же тут можно задавать доступ по ролям
-                        .requestMatchers(HttpMethod.GET,"/**").permitAll()
+                        .requestMatchers(HttpMethod.GET, "/**").permitAll()
                         .requestMatchers(HttpMethod.POST, "/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE,"/**").permitAll()
-                        .requestMatchers(HttpMethod.PUT,"/**").permitAll()
+                        .requestMatchers(HttpMethod.DELETE, "/**").permitAll()
+                        .requestMatchers(HttpMethod.PUT, "/**").permitAll()
                         .requestMatchers("/v3/api-docs/**").permitAll()
                         //.requestMatchers("/v3/**").permitAll()
                         .requestMatchers("/swagger-ui/**").permitAll()

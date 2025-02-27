@@ -9,18 +9,18 @@ spring:
     #url: jdbc:postgresql://localhost:6541/user_management
     #username: user
     #password: user
-  #########################################################################
+    #########################################################################
     url: jdbc:postgresql://localhost:5432/postgres
     username: postgres
     password: 1331
 
   application:
     name: user-management
-  #security:
-    #oauth2:
+      #security:
+      #oauth2:
       #authorizationserver:
-        #issuer-uri: http://localhost:8081/oauth/token
-  ########################################################################
+    #issuer-uri: http://localhost:8081/oauth/token
+    ########################################################################
     #name: postgres
 
   jpa:
@@ -42,30 +42,30 @@ eureka:
   instance:
     preferIpAddress: true
 
-  #security:
-    #user:
+      #security:
+      #user:
       #name: user
       #password: password
-    #oauth2:
+      #oauth2:
       #authorizationserver:
-        #client:
-          #oidc-client:
-            #registration:
-              #client-id: "oidc-client"
-              #client-secret: "{noop}secret"
-              #client-authentication-methods:
-                #- "client_secret_basic"
-              #authorization-grant-types:
-                #- "authorization_code"
-                #- "refresh_token"
-              #redirect-uris:
-                #- "http://127.0.0.1:8080/login/oauth2/code/oidc-client"
-              #post-logout-redirect-uris:
-                #- "http://127.0.0.1:8080/"
-              #scopes:
-                #- "openid"
-                #- "profile"
-            #require-authorization-consent: true
+      #client:
+      #oidc-client:
+      #registration:
+      #client-id: "oidc-client"
+      #client-secret: "{noop}secret"
+      #client-authentication-methods:
+      #- "client_secret_basic"
+      #authorization-grant-types:
+      #- "authorization_code"
+      #- "refresh_token"
+      #redirect-uris:
+      #- "http://127.0.0.1:8080/login/oauth2/code/oidc-client"
+      #post-logout-redirect-uris:
+      #- "http://127.0.0.1:8080/"
+      #scopes:
+      #- "openid"
+      #- "profile"
+    #require-authorization-consent: true
 
 logging:
   level:

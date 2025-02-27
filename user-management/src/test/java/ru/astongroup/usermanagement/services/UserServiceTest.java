@@ -4,24 +4,30 @@ import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.junit.jupiter.MockitoExtension;
+import ru.astongroup.usermanagement.models.Dtos.UserDto;
+import ru.astongroup.usermanagement.models.UserModel;
+import ru.astongroup.usermanagement.utils.StaticResources;
+import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
+import ru.astongroup.usermanagement.utils.mapper.UserMapper;
 
 import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.mockito.Mockito.*;
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
+import static org.junit.jupiter.api.Assertions.assertThrows;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.argThat;
-
-import ru.astongroup.usermanagement.models.UserModel;
-import ru.astongroup.usermanagement.models.Dtos.UserDto;
-import ru.astongroup.usermanagement.utils.StaticResources;
-import ru.astongroup.usermanagement.utils.mapper.UserMapper;
-import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
+import static org.mockito.Mockito.doNothing;
+import static org.mockito.Mockito.never;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
+import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
-public class UserServiceTest extends ru.astongroup.usermanagement.testUtils.TestUtils  {
+public class UserServiceTest extends ru.astongroup.usermanagement.testUtils.TestUtils {
 
     @InjectMocks
     protected UserService userService;
@@ -89,7 +95,9 @@ public class UserServiceTest extends ru.astongroup.usermanagement.testUtils.Test
         //long userId = testUser0.getId();
         when(userRepository.findById(testUser0.getId())).thenReturn(Optional.empty());
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> { userService.getById(testUser0.getId()); });
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.getById(testUser0.getId());
+        });
 
         assertEquals(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE, exception.getMessage());
 
@@ -113,7 +121,9 @@ public class UserServiceTest extends ru.astongroup.usermanagement.testUtils.Test
     public void testDeleteById_WhenUserDoesNotExist_ThrowsUserNotFoundException() {
         when(userRepository.findById(testUser1.getId())).thenReturn(Optional.empty());
 
-        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> { userService.deleteById(testUser1.getId()); });
+        UserNotFoundException exception = assertThrows(UserNotFoundException.class, () -> {
+            userService.deleteById(testUser1.getId());
+        });
         assertEquals(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE, exception.getMessage());
 
         verify(userRepository, times(1)).findById(testUser1.getId());

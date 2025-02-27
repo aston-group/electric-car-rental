@@ -3,8 +3,10 @@ package ru.astongroup.usermanagement.utils.security;
 import org.junit.jupiter.api.DisplayName;
 import org.junit.jupiter.api.Test;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
 import static org.junit.jupiter.api.Assertions.assertNotEquals;
+import static org.junit.jupiter.api.Assertions.assertTrue;
 
 public class passwordHashingTests {
 
@@ -14,9 +16,11 @@ public class passwordHashingTests {
     private PasswordHashing PasswordHashing = new PasswordHashing();
     String password = "123";
     String passwordHash = "$2a$10$bynIPMKX68HSJHkaKAZ.mOx5ANbcXyAOpaT7AaUsHXRFv9prsDG22";
+
     public passwordHashingTests() {
 
     }
+
     @Test
     @DisplayName("Test verifying password and hash expects succeed")
     public void checkPasswordHashTestExpectSuccess() {
@@ -29,7 +33,7 @@ public class passwordHashingTests {
     @DisplayName("Test verifying password and hash expect fail")
     public void checkPasswordHashTestExpectFail() {
 
-        boolean isPasswordValid = PasswordHashing.checkPasswordHash("passw0rd", passwordHash );
+        boolean isPasswordValid = PasswordHashing.checkPasswordHash("passw0rd", passwordHash);
         assertFalse(isPasswordValid);
     }
 

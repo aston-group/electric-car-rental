@@ -1,18 +1,18 @@
 package ru.astongroup.usermanagement.services;
 
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
+import org.springframework.stereotype.Service;
+import ru.astongroup.usermanagement.components.JwtTokenProvider;
+import ru.astongroup.usermanagement.models.TokenArchive;
+import ru.astongroup.usermanagement.models.UserModel;
+import ru.astongroup.usermanagement.repositories.TokenRepository;
+import ru.astongroup.usermanagement.repositories.UserRepository;
+import ru.astongroup.usermanagement.utils.StaticResources;
+
 import java.time.Instant;
 import java.time.temporal.ChronoUnit;
 import java.util.Date;
-
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
-import org.springframework.stereotype.Service;
-import ru.astongroup.usermanagement.models.UserModel;
-import ru.astongroup.usermanagement.models.TokenArchive;
-import ru.astongroup.usermanagement.utils.StaticResources;
-import ru.astongroup.usermanagement.components.JwtTokenProvider;
-import ru.astongroup.usermanagement.repositories.UserRepository;
-import ru.astongroup.usermanagement.repositories.TokenRepository;
 
 @Slf4j
 @Service
@@ -68,7 +68,7 @@ public class TokenService {
 
         String userName = tokenProvider.getUsernameFromToken(token);
         var userOptional = userRepository.findByUsername(userName);
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
 
             log.info("TokenService.findUserByToken: " + userOptional.get());
             return userRepository.findByUsername(userName).get();

@@ -1,25 +1,24 @@
 package ru.astongroup.usermanagement.services;
 
-import java.util.Arrays;
-import java.util.Collection;
-import lombok.extern.slf4j.Slf4j;
-import lombok.RequiredArgsConstructor;
 import jakarta.transaction.Transactional;
-import org.springframework.stereotype.Service;
+import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
-
+import org.springframework.stereotype.Service;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
 import ru.astongroup.usermanagement.models.UserModel;
-import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.repositories.UserRepository;
-import ru.astongroup.usermanagement.utils.mapper.UserMapper;
-
-import ru.astongroup.usermanagement.utils.security.PasswordHashing;
-import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
-import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
+import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.utils.exceptions.DatabaseTransactionException;
+import ru.astongroup.usermanagement.utils.exceptions.EmailAlreadyBusyException;
+import ru.astongroup.usermanagement.utils.exceptions.UserNotFoundException;
+import ru.astongroup.usermanagement.utils.mapper.UserMapper;
+import ru.astongroup.usermanagement.utils.security.PasswordHashing;
+
+import java.util.Arrays;
+import java.util.Collection;
 
 @Slf4j
 @Service
@@ -45,12 +44,10 @@ public class UserService implements UserDetailsService {
         user.setPassword(hashedPassword);
         var savedUser = userRepository.save(user);
 
-        if (savedUser.equals(user))
-        {
+        if (savedUser.equals(user)) {
             log.info("Пользователь email:  {} успешно создан", user.getEmail());
             return UserMapper.mapToDto(savedUser);
-        }
-        else {
+        } else {
             log.info("Пользователь email: {} не создан. Ошибка при сохранении: \n %s", user.getEmail(), StaticResources.CANNOT_CREATE_NEW_USER_EXCEPTION_MESSAGE);
             throw new DatabaseTransactionException(StaticResources.CANNOT_CREATE_NEW_USER_EXCEPTION_MESSAGE);
         }
@@ -67,11 +64,10 @@ public class UserService implements UserDetailsService {
 
         var userOptional = userRepository.findByEmail(email);
 
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             log.info("Пользователь email: {} найден", email);
             return userOptional.get();
-        }
-        else {
+        } else {
             String message = StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE;
             log.info("Пользователь email: {} не найден", email);
             throw new UserNotFoundException(message);
@@ -82,11 +78,10 @@ public class UserService implements UserDetailsService {
 
         var userOptional = userRepository.findById(id);
 
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             log.info("Пользователь id: {} найден", id);
             return UserMapper.mapToDto(userOptional.get());
-        }
-        else {
+        } else {
             log.info("Пользователь id: {} не найден", id);
             throw new UserNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
         }
@@ -118,8 +113,7 @@ public class UserService implements UserDetailsService {
             userRepository.save(updatedUser(existingUser, user.getName(), user.getLastName(), user.getPhone(), user.getImage()));
             log.info("Пользователь id: {} обновлен", id);
             return true;
-        }
-        else {
+        } else {
             log.info("Пользователь id: {} не найден", id);
             throw new UserNotFoundException(StaticResources.USER_NOT_FOUND_EXCEPTION_MESSAGE);
         }
@@ -146,7 +140,7 @@ public class UserService implements UserDetailsService {
     public UserDetails loadUserByUsername(String username) throws UsernameNotFoundException {
 
         var userOptional = userRepository.findByUsername(username);
-        if(userOptional.isPresent()) {
+        if (userOptional.isPresent()) {
             log.info("Пользователь с email {} найден", username);
             return userOptional.get();
         }

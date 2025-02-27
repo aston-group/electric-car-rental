@@ -5,10 +5,15 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import ru.astongroup.carbooking.client.CarClient;
-
+import ru.astongroup.carbooking.client.NotificationClient;
 import ru.astongroup.carbooking.client.UserClient;
-import ru.astongroup.carbooking.dto.*;
+import ru.astongroup.carbooking.dto.BookingReqCreateDto;
+import ru.astongroup.carbooking.dto.BookingReqUpdateDto;
+import ru.astongroup.carbooking.dto.BookingResponseDTO;
+import ru.astongroup.carbooking.dto.CarResponseDTO;
+import ru.astongroup.carbooking.dto.NotificationCreateDto;
 import ru.astongroup.carbooking.entity.Booking;
+import ru.astongroup.carbooking.entity.NotificationType;
 import ru.astongroup.carbooking.entity.Status;
 import ru.astongroup.carbooking.exception.BookingException;
 import ru.astongroup.carbooking.mapper.BookingMapper;
@@ -30,6 +35,7 @@ public class BookingServiceImpl implements BookingService {
     private final BookingMapper bookingMapper;
     private final CarClient carClient;
     private final UserClient userClient;
+    private final NotificationClient notificationClient;
 
     //думаю нужно получать цену за минуту с таблицы машины, когда админ будет ее добавлять
 //    private static final double PRICE_PER_MINUTE = 1; // Цена 1$ за минуту
@@ -60,6 +66,12 @@ public class BookingServiceImpl implements BookingService {
                 bookingReqCreateDto.getStartTime(),
                 bookingReqCreateDto.getEndTime()));
         Booking savedBooking = bookingRepository.save(bookingEntity);
+        notificationClient.sendNotification(NotificationCreateDto.builder()
+                .userId(bookingReqCreateDto.getUserId())
+                .bookingId(savedBooking.getId())
+                .notificationType(NotificationType.NEW_BOOKING)
+                .build());
+
         return bookingMapper.toBookingResponseDto(savedBooking);
 
     }
@@ -103,6 +115,11 @@ public class BookingServiceImpl implements BookingService {
                 });
 
         booking.setStatus(Status.CANCELED);
+        notificationClient.sendNotification(NotificationCreateDto.builder()
+                .bookingId(booking.getId())
+                .userId(booking.getUserId())
+                .notificationType(NotificationType.REJECTED_BOOKING)
+                .build());
         bookingRepository.save(booking);
     }
 
@@ -146,6 +163,11 @@ public class BookingServiceImpl implements BookingService {
                 });
 
         booking.setStatus(Status.CONFIRMED);
+        notificationClient.sendNotification(NotificationCreateDto.builder()
+                .bookingId(booking.getId())
+                .userId(booking.getUserId())
+                .notificationType(NotificationType.CONFIRMED_BOOKING)
+                .build());
         Booking savedBooking = bookingRepository.save(booking);
 
         return bookingMapper.toBookingResponseDto(savedBooking);

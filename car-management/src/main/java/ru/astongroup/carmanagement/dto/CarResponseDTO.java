@@ -1,6 +1,5 @@
 package ru.astongroup.carmanagement.dto;
 
-import jakarta.validation.constraints.NotBlank;
 import lombok.Data;
 
 import java.math.BigDecimal;

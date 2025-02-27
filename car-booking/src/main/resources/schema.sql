@@ -2,13 +2,13 @@ DROP TABLE IF EXISTS bookings CASCADE;
 
 CREATE TABLE IF NOT EXISTS bookings
 (
-    id    bigserial PRIMARY KEY,
-    user_id BIGINT NOT NULL,
-    car_id BIGINT NOT NULL,
-    start_time TIMESTAMP NOT NULL,
-    end_time TIMESTAMP NOT NULL,
-    status VARCHAR(20) NOT NULL CHECK (status IN ('PENDING', 'CONFIRMED', 'CANCELED')),
-    price DOUBLE PRECISION NOT NULL DEFAULT 0
+    id         bigserial PRIMARY KEY,
+    user_id    BIGINT           NOT NULL,
+    car_id     BIGINT           NOT NULL,
+    start_time TIMESTAMP        NOT NULL,
+    end_time   TIMESTAMP        NOT NULL,
+    status     VARCHAR(20)      NOT NULL CHECK (status IN ('PENDING', 'CONFIRMED', 'CANCELED')),
+    price      DOUBLE PRECISION NOT NULL DEFAULT 0
 );
 
 

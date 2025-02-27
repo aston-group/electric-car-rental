@@ -1,7 +1,6 @@
 package ru.astongroup.usermanagement.utils.security;
 
 import org.mindrot.jbcrypt.BCrypt;
-
 import ru.astongroup.usermanagement.utils.StaticResources;
 
 public class PasswordHashing {

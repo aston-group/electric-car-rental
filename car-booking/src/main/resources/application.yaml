@@ -1,5 +1,6 @@
-car-management.url: http://localhost:8083
-user-management.url: http://localhost:8080/users
+car-management.url: http://api-gateway:8080/cars
+user-management.url: http://api-gateway:8080/users
+notifications.url: http://api-gateway:8080/notifications
 
 
 server:
@@ -29,8 +30,8 @@ spring:
 eureka:
   client:
     service-url:
-#      defaultZone: http://discovery-server:8761/eureka/
-        defaultZone: http://localhost:8080/
+      defaultZone: http://discovery-server:8761/eureka/
+      #defaultZone: http://localhost:8080/
   instance:
     preferIpAddress: true
 

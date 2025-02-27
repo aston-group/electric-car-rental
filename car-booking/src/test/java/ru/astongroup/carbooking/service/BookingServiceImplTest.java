@@ -1,16 +1,22 @@
 package ru.astongroup.carbooking.service;
 
-import static org.mockito.Mockito.*;
-import org.junit.jupiter.api.AfterEach;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
 import org.junit.jupiter.api.extension.ExtendWith;
 import org.mockito.InjectMocks;
 import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 import ru.astongroup.carbooking.client.CarClient;
+import ru.astongroup.carbooking.client.NotificationClient;
 import ru.astongroup.carbooking.client.UserClient;
-import ru.astongroup.carbooking.dto.*;
+import ru.astongroup.carbooking.dto.BookingReqCreateDto;
+import ru.astongroup.carbooking.dto.BookingReqUpdateDto;
+import ru.astongroup.carbooking.dto.BookingResponseDTO;
+import ru.astongroup.carbooking.dto.CarResponseDTO;
+import ru.astongroup.carbooking.dto.NotificationCreateDto;
+import ru.astongroup.carbooking.dto.NotificationResponseDto;
+import ru.astongroup.carbooking.dto.UserRequestDto;
 import ru.astongroup.carbooking.entity.Booking;
 import ru.astongroup.carbooking.entity.Status;
 import ru.astongroup.carbooking.mapper.BookingMapper;
@@ -22,9 +28,13 @@ import java.util.Collection;
 import java.util.List;
 import java.util.Optional;
 
-import static org.junit.jupiter.api.Assertions.*;
+import static org.junit.jupiter.api.Assertions.assertEquals;
+import static org.junit.jupiter.api.Assertions.assertFalse;
+import static org.junit.jupiter.api.Assertions.assertNotNull;
 import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyLong;
+import static org.mockito.Mockito.times;
+import static org.mockito.Mockito.verify;
 import static org.mockito.Mockito.when;
 
 @ExtendWith(MockitoExtension.class)
@@ -38,6 +48,9 @@ class BookingServiceImplTest {
 
     @Mock
     private CarClient carClient;
+
+    @Mock
+    private NotificationClient notificationClient;
 
     @Mock
     private UserClient userClient;
@@ -73,6 +86,8 @@ class BookingServiceImplTest {
     void createBooking_Success() {
         when(userClient.getUserById(anyLong())).thenReturn(Optional.of(UserRequestDto.builder().id(1L).build()));
         when(carClient.getCarById(1L)).thenReturn(Optional.of(carResponseDTO));
+        when(notificationClient.sendNotification(Mockito.any(NotificationCreateDto.class)))
+                .thenReturn(NotificationResponseDto.builder().build());
         when(bookingMapper.toBookingEntity(any(BookingReqCreateDto.class))).thenReturn(booking);
         when(bookingRepository.save(any(Booking.class))).thenReturn(booking);
         when(bookingMapper.toBookingResponseDto(any(Booking.class))).thenReturn(bookingResponseDTO);

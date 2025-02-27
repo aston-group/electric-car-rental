@@ -1,20 +1,19 @@
 package ru.astongroup.usermanagement.components;
 
-import java.util.Date;
-import java.util.function.Function;
-import java.security.Key;
-import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.Claims;
-import io.jsonwebtoken.security.Keys;
+import io.jsonwebtoken.Jwts;
 import io.jsonwebtoken.SignatureAlgorithm;
-import java.nio.charset.StandardCharsets;
-
+import io.jsonwebtoken.security.Keys;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Component;
-
-import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.models.Dtos.UserDto;
+import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.utils.StaticResources;
+
+import java.nio.charset.StandardCharsets;
+import java.security.Key;
+import java.util.Date;
+import java.util.function.Function;
 
 @Slf4j
 @Component

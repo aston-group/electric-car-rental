@@ -9,6 +9,7 @@ import java.util.Map;
 public final class EmailMessages {
     private EmailMessages() {
     }
+
     public static final String NEW_BOOKING_TEXT = "Уважаемый,  %s!\nПоздравляем, вы только что отправили заявку" +
             " на бронирование автомобиля!";
     public static final String CONFIRMED_BOOKING_TEXT = "Уважаемый,  %s!\nПоздравляем, ваше бронирование подтверждено!";

@@ -1,16 +1,16 @@
 package ru.astongroup.usermanagement.components;
 
-import java.util.List;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.security.authentication.AuthenticationManager;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
-import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.core.authority.SimpleGrantedAuthority;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-
 import ru.astongroup.usermanagement.models.UserModel;
 import ru.astongroup.usermanagement.utils.StaticResources;
 import ru.astongroup.usermanagement.utils.security.PasswordHashing;
+
+import java.util.List;
 
 @Slf4j
 public class CustomAuthenticationManager implements AuthenticationManager {
@@ -35,8 +35,7 @@ public class CustomAuthenticationManager implements AuthenticationManager {
 
             log.info("-------------------------\nCustomAuthenticationManager.authenticate\nUser: " + user.getUsername() + " has been authenticated\n-------------------------");
             return new UsernamePasswordAuthenticationToken(user, null, authorities);
-        }
-        else  {
+        } else {
             log.info("-------------------------\nCustomAuthenticationManager.authenticate\nUser: " + user.getUsername() + " has not been authenticated\n-------------------------");
             throw new AuthenticationException(StaticResources.INVALID_USERNAME_OR_PASSWORD_EXCEPTION_MESSAGE) {
             };

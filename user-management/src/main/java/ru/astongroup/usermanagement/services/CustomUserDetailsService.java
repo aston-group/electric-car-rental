@@ -1,10 +1,5 @@
 package ru.astongroup.usermanagement.services;
 
-import org.springframework.stereotype.Service;
-import org.springframework.security.core.userdetails.UserDetails;
-import org.springframework.security.core.userdetails.UserDetailsService;
-import org.springframework.security.core.userdetails.UsernameNotFoundException;
-import ru.astongroup.usermanagement.repositories.UserRepository;
 /*
 @Service
 public class CustomUserDetailsService implements UserDetailsService {

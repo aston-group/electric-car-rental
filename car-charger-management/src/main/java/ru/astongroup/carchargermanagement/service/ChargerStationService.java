@@ -14,5 +14,6 @@ public interface ChargerStationService {
     void update(Long id, ChargerStationRequestDto chargerStationRequestDto);
 
     ChargerStationResponseDto startCharging(Long stationId, Long carId);
+    ChargerStationResponseDto endCharging(Long stationId, Long carId);
 
 }

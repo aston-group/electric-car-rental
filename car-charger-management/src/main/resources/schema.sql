@@ -7,7 +7,7 @@ CREATE TABLE IF NOT EXISTS chargerstations
     address VARCHAR(254) NOT NULL,
     latitude FLOAT NOT NULL,
     longitude FLOAT NOT NULL,
-    is_available BOOLEAN NOT NULL
+    is_available BOOLEAN
 );
 
 

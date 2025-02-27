@@ -9,6 +9,7 @@ import ru.astongroup.carchargermanagement.dto.ChargerStationRequestDto;
 import ru.astongroup.carchargermanagement.dto.ChargerStationResponseDto;
 import ru.astongroup.carchargermanagement.entity.ChargerStation;
 import ru.astongroup.carchargermanagement.exception.DataNotFoundException;
+import ru.astongroup.carchargermanagement.exception.DatabaseTransactionException;
 import ru.astongroup.carchargermanagement.mapper.ChargerStationMapper;
 import ru.astongroup.carchargermanagement.repository.ChargerStationRepository;
 
@@ -74,7 +75,6 @@ public class ChargerStationServiceImpl implements ChargerStationService {
     }
 
     @Override
-    @Transactional
     public ChargerStationResponseDto startCharging(Long stationId, Long carId) {
         ChargerStation station = chargerStationRepository.findById(stationId)
                 .orElseThrow(() -> new DataNotFoundException("Charger station not found" + stationId));
@@ -92,6 +92,27 @@ public class ChargerStationServiceImpl implements ChargerStationService {
         chargerStationRepository.save(station);
 
         log.info("Станция {} занята электромобилем {}", stationId, carId);
+        return ChargerStationMapper.toChargerStationResponseDto(station);
+    }
+
+    @Override
+    public ChargerStationResponseDto endCharging(Long stationId, Long carId) {
+        ChargerStation station = chargerStationRepository.findById(stationId)
+                .orElseThrow(() -> new DataNotFoundException("Charger station not found" + stationId));
+
+        if(station.getIsAvailableStation()) {
+            throw new IllegalStateException("Charger station is available");
+        }
+
+        CarResponseDto carResponseDto = carClient.getCarById(carId)
+                .orElseThrow(() -> new DataNotFoundException("Car  not found" + carId));
+
+        log.info("Закончена зарядка машины: {}", carResponseDto);
+
+        station.setIsAvailableStation(true);
+        chargerStationRepository.save(station);
+
+        log.info("Станция {} Освободилась от электродрандулета {}", stationId, carId);
         return ChargerStationMapper.toChargerStationResponseDto(station);
     }
 }

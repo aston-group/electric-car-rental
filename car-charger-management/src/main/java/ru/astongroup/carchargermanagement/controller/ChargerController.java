@@ -57,4 +57,20 @@ public class ChargerController {
         chargerStationService.update(id, chargerStationRequestDto);
         return new ResponseEntity<>(HttpStatus.NO_CONTENT);
     }
+
+    @GetMapping("/start/{id}")
+    public ResponseEntity<ChargerStationResponseDto> startCharging(
+            @PathVariable Long id,
+            @RequestParam Long carId) {
+        ChargerStationResponseDto responseDto = chargerStationService.startCharging(id, carId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
+
+    @GetMapping("/end/{id}")
+    public ResponseEntity<ChargerStationResponseDto> endCharging(
+            @PathVariable Long id,
+            @RequestParam Long carId) {
+        ChargerStationResponseDto responseDto = chargerStationService.endCharging(id, carId);
+        return new ResponseEntity<>(responseDto, HttpStatus.OK);
+    }
 }

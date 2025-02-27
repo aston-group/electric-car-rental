@@ -4,7 +4,7 @@ notifications.url: http://api-gateway:8080/notifications
 
 
 server:
-  port: 8086
+  port: 8085
 
 spring:
   datasource:

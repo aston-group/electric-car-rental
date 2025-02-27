@@ -2,6 +2,8 @@ target/
 .gigaide/
 .mvn
 .idea
+/keykloack/
+/keycloak/
 keykloack/
 keycloak/
 !.mvn/wrapper/maven-wrapper.jar

@@ -1,0 +1,179 @@
+{
+	"info": {
+		"_postman_id": "4bcd4a33-40df-46b4-bbd1-fc05fb8ff413",
+		"name": "3. Car Management 8083 +",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "34696242"
+	},
+	"item": [
+		{
+			"name": "1. Create Car",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n    \"model\": \"Жигули шестёра\",\r\n    \"manufacturer\": \"Ведропроизводительный завод\",\r\n    \"batteryCapacityInKwh\": 57.5,\r\n    \"mileageInKilometers\": 1500,\r\n    \"rangeInKilometers\": 614,\r\n    \"status\": \"AVAILABLE\",\r\n    \"costPerMinute\": 1.00,\r\n    \"issues\": \"По ощущениям в салоне ночевали бомжи\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/cars/create",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"cars",
+						"create"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "2. Get Car By Id",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/cars/get/1",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"cars",
+						"get",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "3. Get All Cars",
+			"protocolProfileBehavior": {
+				"disableBodyPruning": true
+			},
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "GET",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Andrew\",\r\n  \"email\": \"1234567\",\r\n  \"lastName\": \"123141241\",\r\n  \"password\": \"123\",\r\n  \"phone\": \"12345678\",\r\n  \"userStatus\": 1,\r\n  \"image\": null\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/cars/all",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"cars",
+						"all"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "4. Update Car",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "PUT",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": " {\r\n        \"model\": \"Tesla CyberPunk\",\r\n        \"manufacturer\": \"Elon Scout\",\r\n        \"batteryCapacityInKwh\": 57.5,\r\n        \"mileageInKilometers\": 33322,\r\n        \"rangeInKilometers\": 431415,\r\n        \"status\": \"AVAILABLE\",\r\n        \"costPerMinute\": 8.00,\r\n        \"issues\": \"А тут, видимо, бомжи отведали собачатины\"\r\n    }",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/cars/update/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"cars",
+						"update",
+						"3"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "5. Delete Car",
+			"request": {
+				"auth": {
+					"type": "noauth"
+				},
+				"method": "DELETE",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\r\n  \"name\": \"Andrew\",\r\n  \"email\": \"123\",\r\n  \"lastName\": \"999999999\",\r\n  \"phone\": \"12345678\"\r\n}",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "http://localhost:8083/cars/del/3",
+					"protocol": "http",
+					"host": [
+						"localhost"
+					],
+					"port": "8083",
+					"path": [
+						"cars",
+						"del",
+						"3"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
